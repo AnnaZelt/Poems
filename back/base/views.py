@@ -71,6 +71,7 @@ def create_poem(request):
 
         poem_serializer = GeneratedPoemSerializer(data={'user': request.user.id, 'input': input_obj.id, 'poem_text': generated_poem_text})
         if poem_serializer.is_valid():
+            poem_serializer.save()
             return Response(poem_serializer.data, status=201)
         # If poem_serializer is not valid, set the input object to inactive
         input_obj.is_active = False
