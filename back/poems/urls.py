@@ -18,5 +18,6 @@ urlpatterns = [
     path('api/generate_poem/', views.create_poem),
     path('api/generated_poem_list/', views.generated_poem_list),
     path('api/generated_poem/<int:pk>/', views.generated_poem_detail),
+    path('api/user_list/', views.user_list),
     path('api/user/<int:pk>/', views.user_detail),
 ]
