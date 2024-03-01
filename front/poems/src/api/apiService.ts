@@ -81,15 +81,26 @@ export const apiService = {
   },
 
   async createPoem(inputText: string, poetStyle: string) {
-    const response = await fetch(`${API_BASE_URL}generate_poem/`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ input_text: inputText, poet_style: poetStyle }),
-    });
-    return await response.json();
-  },
+    try {
+        const response = await fetch(`${API_BASE_URL}generate_poem/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ input_text: inputText, poet_style: poetStyle }),
+        });
+        if (!response.ok) {
+            throw new Error(`Failed to create poem: ${response.status} - ${response.statusText}`);
+        }
+        const responseData = await response.json(); // Wait for the response data
+        return responseData; // Return the response data
+    } catch (error) {
+        console.error('Failed to create poem:', error);
+        throw error; // Rethrow the error to be caught by the calling code
+    }
+},
+
+
   
 
   async getUser(token: string, userId: number) {

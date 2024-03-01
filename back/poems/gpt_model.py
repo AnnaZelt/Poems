@@ -1,5 +1,5 @@
 from transformers import GPT2LMHeadModel, GPT2Tokenizer
-import json
+import json, os
 
 # Load pre-trained model and tokenizer
 model_name = "gpt2"
@@ -7,8 +7,13 @@ model = GPT2LMHeadModel.from_pretrained(model_name)
 tokenizer = GPT2Tokenizer.from_pretrained(model_name)
 
 def generate_poem(input_text, poet_style):
-    # Define prompts for different poets
-    with open('./poet_prompts.json', 'r') as f:
+    # Get the directory of the current script
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+
+    # Path to the poet_prompts.json file
+    poet_prompts_path = os.path.join(current_dir, 'poet_prompts.json')
+
+    with open(poet_prompts_path, 'r') as f:
         poet_prompts = json.load(f)
 
     # Choose prompt based on poet style or use input text
@@ -25,7 +30,7 @@ def generate_poem(input_text, poet_style):
 
 # # Example usage
 # custom_prompt = input("Enter your custom prompt: ")
-# poet_style = PoetStyle.HP_LOVECRAFT
+# poet_style = "HP_LOVECRAFT"
 # generated_poem = generate_poem(custom_prompt, poet_style)
 # print("Generated Poem:")
 # print(generated_poem)
