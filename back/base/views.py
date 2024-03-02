@@ -1,17 +1,21 @@
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from django.contrib.auth import get_user_model, authenticate, logout
+from django.contrib.auth import get_user_model
 from .models import Input, GeneratedPoem
 from .serializers import InputSerializer, GeneratedPoemSerializer, UserSerializer
 from poems.gpt_model import generate_poem
-import requests
+from rest_framework_simplejwt.views import TokenObtainPairView
+from .serializers import CustomTokenObtainPairSerializer
 
 User = get_user_model()
 
 @api_view(['GET'])
 def index(req):
     return Response('hello')
+
+class CustomTokenObtainPairView(TokenObtainPairView):
+    serializer_class = CustomTokenObtainPairSerializer
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -141,26 +145,3 @@ def user_detail(request, pk):
             return Response(status=204)
     else:
         return Response({"message": "You do not have permission to perform this action"}, status=403)
-    
-# @api_view(['POST'])
-# def login_user(request):
-#     username = request.data.get('username', '')
-#     password = request.data.get('password', '')
-#     user = authenticate(request, username=username, password=password)
-#     if user is not None:
-#         # Assuming you have a JWT token authentication system
-#         # You can use the Django Rest Framework JWT library for this
-#         response = requests.post('http://127.0.0.1:8000/api/token/', data={'username': username, 'password': password})
-#         if response.status_code == 200:
-#             data = response.json()
-#             return Response(data)
-#     return Response(status=400)
-
-# @api_view(['POST'])
-# def logout_user(request):
-#     refresh_token = request.data.get('refresh_token', '')
-#     response = requests.post('http://127.0.0.1:8000/api/token/logout/', data={'refresh': refresh_token})
-#     if response.status_code == 204:
-#         logout(request)
-#         return Response(status=204)
-#     return Response(status=400)

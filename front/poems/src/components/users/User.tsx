@@ -1,59 +1,50 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { AppDispatch, RootState } from '../../redux/store';
-import { fetchUserDetail, updateUser } from '../../features/users/userSlice';
+import { fetchUserDetail } from '../../features/users/userSlice';
 import Navbar from './Navbar';
 
 interface UserProps {
   userId: number;
 }
 
-const User: React.FC<UserProps> = ({ userId }) => {
-  const [username, setUsername] = useState<string>('');
-  const [email, setEmail] = useState<string>('');
+interface Token {
+  refresh: string;
+  access: string;
+  id: number;
+  username: string;
+  email: string;
+}
 
-  const currentUser = useSelector((state: RootState) => state.users.currentUser);
+const User: React.FC<UserProps> = ({ userId }) => {
+  const [loading, setLoading] = useState(true);
   const dispatch = useDispatch<AppDispatch>();
 
-  useEffect(() => {
-    if (userId) {
-      dispatch(fetchUserDetail(userId));
-    }
-  }, [userId, dispatch]);
+  const tokenString = localStorage.getItem('token');
+  const token: Token = JSON.parse(tokenString!);
+
+  // useEffect(() => {
+  //   if (token) {
+  //     dispatch(fetchUserDetail(token.id));
+  //   }
+  // }, [token, dispatch]);
 
   useEffect(() => {
-    if (currentUser) {
-      setUsername(currentUser.username);
-      setEmail(currentUser.email);
+    if (token) {
+      setLoading(false);
     }
-  }, [currentUser]);
+  }, [token]);
 
-  const handleUpdateUser = () => {
-    const token = localStorage.getItem('token');
-    if (currentUser) {
-        dispatch(updateUser({ token: token!, userId: currentUser.id, userData: { username, email } }));    }
-  };
+  if (!token) {
+    return <p>Error: Token not found</p>;
+  }
 
   return (
     <div>
-      {currentUser ? (
-        <>
-          <h2>User Details</h2>
-          <p>ID: {currentUser.id}</p>
-          <label>
-            Username:
-            <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
-          </label>
-          <label>
-            Email:
-            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-          </label>
-          <button onClick={handleUpdateUser}>Update User</button>
-        </>
-      ) : (
-        <p>Loading user details...</p>
-      )}
-      <Navbar></Navbar>
+      <h2>User Details</h2>
+      <p>Username: {token.username}</p>
+      <p>Email: {token.email}</p>
+      <Navbar />
     </div>
   );
 };

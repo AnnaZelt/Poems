@@ -12,8 +12,15 @@ export const apiService = {
       },
       body: JSON.stringify({ username, password }),
     });
-    return await response.json();
+  
+    if (!response.ok) {
+      throw new Error('Login failed');
+    }
+  
+    const responseData = await response.json();
+    return responseData // Return the 'access' token
   },
+  
 
   async logout(refreshToken: string) {
     const response = await fetch(`${API_BASE_URL}token/logout/`, {

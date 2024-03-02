@@ -10,7 +10,7 @@ from base import views
 urlpatterns = [
     path('', include('base.urls')),
     path('admin/', admin.site.urls),
-    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/', views.CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/token/logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('api/input_list/', views.input_list),

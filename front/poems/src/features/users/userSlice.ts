@@ -6,57 +6,45 @@ interface User {
   id: number;
   username: string;
   email: string;
-  // active: boolean
+  // Add other fields as needed
 }
 
 interface UserState {
-  currentUser:  User | null;
-  users: User[]
+  currentUser: User | null;
+  users: Record<number, User>; // Normalized users object
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
 }
 
 const initialState: UserState = {
   currentUser: null,
-  users: [],
-  status: 'idle'
+  users: {},
+  status: 'idle',
 };
 
-export const updateUser = createAsyncThunk(
+export const updateUser = createAsyncThunk<User, { token: string; userId: number; userData: Partial<User> }>(
   'users/updateUser',
-  async (data: { token: string; userId: number; userData: Partial<User> }, { getState, dispatch }) => {
+  async (data, { dispatch }) => {
     const { token, userId, userData } = data;
-    try {
-      const updatedUser = await apiService.updateUser(token, userId, userData);
-      // Update the user in the state
-      dispatch(setUser(updatedUser));
-      return updatedUser;
-    } catch (error) {
-      // Handle error
-      throw error;
-    }
+    const updatedUser = await apiService.updateUser(token, userId, userData);
+    // Update the user in the state
+    dispatch(setUser(updatedUser));
+    return updatedUser;
   }
 );
 
-// Define types for the arguments and the return value
-interface UpdateUserArgs {
-  token: string;
-  userId: number;
-  userData: Partial<User>;
-}
-export const fetchUsers = createAsyncThunk('users/fetchUsers', async (_, { getState }) => {
+export const fetchUsers = createAsyncThunk<User[]>('users/fetchUsers', async (_, { getState }) => {
   const { auth } = getState() as RootState;
-  const token = auth.token;
-  const response = await apiService.getUsers(token!);
+  const token = auth.token!;
+  const response = await apiService.getUsers(token);
   return response;
 });
 
-export const fetchUserDetail = createAsyncThunk('users/fetchUserDetail', async (userId: number, { getState }) => {
+export const fetchUserDetail = createAsyncThunk<User, number>('users/fetchUserDetail', async (userId, { getState }) => {
   const { auth } = getState() as RootState;
-  const token = auth.token;
-  const response = await apiService.getUserDetail(token!, userId);
+  const token = auth.token!;
+  const response = await apiService.getUserDetail(token, userId);
   return response;
 });
-
 
 const userSlice = createSlice({
   name: 'users',
@@ -64,6 +52,7 @@ const userSlice = createSlice({
   reducers: {
     setUser(state, action: PayloadAction<User>) {
       state.currentUser = action.payload;
+      state.users[action.payload.id] = action.payload; // Update or add user to the normalized state
     },
     clearUser(state) {
       state.currentUser = null;
@@ -71,46 +60,18 @@ const userSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(fetchUsers.fulfilled, (state, action) => {
-      state.users = action.payload;
+      action.payload.forEach((user) => {
+        state.users[user.id] = user; // Add users to the normalized state
+      });
     });
     builder.addCase(fetchUserDetail.fulfilled, (state, action) => {
-      // Assuming the payload is a single user
       const user = action.payload;
-      const existingIndex = state.users.findIndex((p) => p.id === user.id);
-      if (existingIndex !== -1) {
-        state.users[existingIndex] = user; // Update existing user
-      } else {
-        state.users.push(user); // Add new user if not found
-      }
+      state.users[user.id] = user; // Update or add user to the normalized state
     });
   },
 });
 
-
-// Thunk actions (async actions)
-export const loginUser = (username: string, password: string) => async (dispatch: any) => {
-  try {
-    // Make API call to login
-    const response = await apiService.login(username, password);
-    dispatch(setUser(response.data));
-  } catch (error) {
-    // Handle login error
-  }
-};
-
-export const logoutUser = () => async (dispatch: any, getState: any) => {
-  try {
-    const { auth } = getState() as RootState;
-    const token = auth.token;
-    // Make API call to logout
-    await apiService.logout(token!);
-    dispatch(clearUser());
-  } catch (error) {
-    // Handle logout error
-  }
-};
-
 export const { setUser, clearUser } = userSlice.actions;
-export const selectUsers = (state: RootState) => state.users.users;
+export const selectUsers = (state: RootState) => Object.values(state.users.users);
 export const selectCurrentUser = (state: RootState) => state.users.currentUser;
 export default userSlice.reducer;
