@@ -1,22 +1,36 @@
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from django.contrib.auth import get_user_model
-from .models import Input, GeneratedPoem
-from .serializers import InputSerializer, GeneratedPoemSerializer, UserSerializer
-from poems.gpt_model import generate_poem
 from rest_framework_simplejwt.views import TokenObtainPairView
-from .serializers import CustomTokenObtainPairSerializer
 from rest_framework.permissions import AllowAny
+from django.contrib.auth import get_user_model
+from django.contrib.auth.hashers import make_password
+from .models import Input, GeneratedPoem
+from .serializers import InputSerializer, GeneratedPoemSerializer, UserSerializer, CustomTokenObtainPairSerializer
+from poems.gpt_model import generate_poem
 
 User = get_user_model()
 
-@api_view(['GET'])
-def index(req):
-    return Response('hello')
-
 class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
+
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def register(request):
+    if request.user.is_authenticated:
+        return Response({'error': 'User is already registered.'}, status=400)
+    else:
+        password = request.data.get('password', '')
+        request.data['is_active'] = True
+        request.data['password'] = make_password(password)  # Hash the password
+        user_serializer = UserSerializer(data=request.data)
+        if user_serializer.is_valid():
+            user = user_serializer.save()
+            return Response(user_serializer.data, status=201)
+        return Response(user_serializer.errors, status=400)
+
+        
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])

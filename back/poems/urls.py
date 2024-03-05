@@ -9,6 +9,7 @@ urlpatterns = [
     path('', include('base.urls')),
     path('admin/', admin.site.urls),
     path('api/token/', views.CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/register/', views.register),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/token/logout/', csrf_exempt(auth_views.LogoutView.as_view()), name='logout'),
     path('api/input_list/', views.input_list),
