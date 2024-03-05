@@ -18,7 +18,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-
 # Application definition 
 
 INSTALLED_APPS = [
@@ -117,17 +116,6 @@ DATABASES = {
         'PORT': '3306',
     }
 }
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'djongo',
-#         'NAME': 'poems_2',
-#         'ENFORCE_SCHEMA': False,
-#         'CLIENT': {
-#             'host': mongo_uri,
-#         }
-#     }
-# }
 
 
 # Password validation

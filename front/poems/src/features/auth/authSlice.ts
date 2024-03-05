@@ -1,14 +1,18 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { apiService } from '../../api/apiService';
+import { RootState } from '../../redux/store';
+import { Token } from '../../types/token';
 
 interface AuthState {
-  token: string | null;
+  token: Token | null;
+  refreshToken: string | null;
   userId: number | null;
   error: string | null;
 }
 
 const initialState: AuthState = {
-  token: localStorage.getItem('token') || null,
+  token: JSON.parse(localStorage.getItem('token') || 'null'), // Parse the stored token string to a token object
+  refreshToken: localStorage.getItem('refresh') || 'null',
   userId: localStorage.getItem('userId') ? Number(localStorage.getItem('userId')) : null,
   error: null,
 };
@@ -18,52 +22,41 @@ interface LoginPayload {
   password: string;
 }
 
-interface Token {
-  access: string;
-  refresh: string;
-  id: number;
-  username: string;
-  email: string;
-  is_active: boolean;
-}
-
 export const login = createAsyncThunk<Token, LoginPayload>(
   'auth/login',
-  async ({ username, password }) => {
+  async ({ username, password }, { rejectWithValue }) => {
     try {
       const token = await apiService.login(username, password);
       localStorage.setItem('token', JSON.stringify(token)); // Store the token object
       return token;
     } catch (error) {
       console.error('Login failed:', error);
-      throw error;
+      return rejectWithValue((error as Error).message || 'Login failed');
     }
   }
 );
 
-
-
-
-
 export const logout = createAsyncThunk<void, void>(
   'auth/logout',
-  async () => {
-    const refreshToken = localStorage.getItem('refreshToken');
-    await apiService.logout(refreshToken || '');
+  async (_, { getState }) => {
+    const { auth } = getState() as RootState;
+    const token = auth.token;
+    const response = await apiService.logout(token!);
+    return response;
   }
 );
+
+
 
 const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    setToken(state, action: PayloadAction<string>) {
+    setToken(state, action: PayloadAction<Token | null>) {
       state.token = action.payload;
-      localStorage.setItem('token', action.payload);
     },
     setUserId(state, action: PayloadAction<number>) {
       state.userId = action.payload;
-      localStorage.setItem('userId', action.payload.toString());
     },
     setError(state, action: PayloadAction<string | null>) {
       state.error = action.payload;
@@ -71,19 +64,22 @@ const authSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(login.fulfilled, (state, action) => {
-      if (action.payload && typeof action.payload === 'string') {
-        state.token = action.payload;
-        localStorage.setItem('token', action.payload);
-      } else {
-        state.error = 'Login failed';
-      }
+      const { access, id } = action.payload;
+      state.token = { access, refresh: '', id, username: '', email: '', is_active: true }; // Update the token object
+      state.userId = id;
+      state.error = null;
     });
     builder.addCase(logout.fulfilled, (state) => {
       state.token = null;
-      localStorage.removeItem('token');
+      state.userId = null;
+      state.error = null;
+    });
+    builder.addCase(login.rejected, (state, action) => {
+      state.error = action.payload as string;
     });
   },
 });
+
 
 export const { setToken, setUserId, setError } = authSlice.actions;
 export const selectToken = (state: { auth: AuthState }) => state.auth.token;

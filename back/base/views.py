@@ -7,6 +7,7 @@ from .serializers import InputSerializer, GeneratedPoemSerializer, UserSerialize
 from poems.gpt_model import generate_poem
 from rest_framework_simplejwt.views import TokenObtainPairView
 from .serializers import CustomTokenObtainPairSerializer
+from rest_framework.permissions import AllowAny
 
 User = get_user_model()
 
@@ -64,19 +65,28 @@ def generated_poem_list(request):
     serializer = GeneratedPoemSerializer(poems, many=True)
     return Response(serializer.data)
 
+from django.contrib.auth.models import AnonymousUser
+
 @api_view(['POST'])
+@permission_classes([AllowAny])
 def create_poem(request):
     input_text = request.data.get('input_text', '')
     poet_style = request.data.get('poet_style', '')
+    
+    user_id = None
+    if request.user.is_authenticated:
+        user_id = request.user.id
 
-    input_serializer = InputSerializer(data={'user': request.user.id, 'input_text': input_text})
+    print(input_text, poet_style, user_id)
+    input_serializer = InputSerializer(data={'user': user_id, 'input_text': input_text})
     if input_serializer.is_valid():
         input_obj = input_serializer.save()
         generated_poem_text = generate_poem(input_obj.input_text, poet_style)
 
-        poem_serializer = GeneratedPoemSerializer(data={'user': request.user.id, 'input': input_obj.id, 'poem_text': generated_poem_text})
+        poem_serializer = GeneratedPoemSerializer(data={'user': user_id, 'input': input_obj.id, 'poem_text': generated_poem_text})
         if poem_serializer.is_valid():
             poem_serializer.save()
+            print(poem_serializer.data)
             return Response(poem_serializer.data, status=201)
         # If poem_serializer is not valid, set the input object to inactive
         input_obj.is_active = False
@@ -84,6 +94,8 @@ def create_poem(request):
         return Response(poem_serializer.errors, status=400)
 
     return Response(input_serializer.errors, status=400)
+
+
 
 @api_view(['GET', 'PUT', 'DELETE'])
 @permission_classes([IsAuthenticated])

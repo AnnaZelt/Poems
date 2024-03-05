@@ -1,13 +1,8 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { RootState } from '../../redux/store';
 import { apiService } from '../../api/apiService';
-
-interface User {
-  id: number;
-  username: string;
-  email: string;
-  // Add other fields as needed
-}
+import { User } from '../../types/user';
+import { Token } from '../../types/token';
 
 interface UserState {
   currentUser: User | null;
@@ -21,7 +16,7 @@ const initialState: UserState = {
   status: 'idle',
 };
 
-export const updateUser = createAsyncThunk<User, { token: string; userId: number; userData: Partial<User> }>(
+export const updateUser = createAsyncThunk<User, { token: Token; userId: number; userData: Partial<User> }>(
   'users/updateUser',
   async (data, { dispatch }) => {
     const { token, userId, userData } = data;

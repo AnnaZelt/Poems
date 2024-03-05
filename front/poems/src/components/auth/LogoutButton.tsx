@@ -1,13 +1,19 @@
-import { apiService } from '../../api/apiService';
+import React from 'react';
+import { useDispatch } from 'react-redux';
+import { logout } from '../../features/auth/authSlice';
+import { AppDispatch } from '../../redux/store';
 
-const LogoutButton = () => {
+interface LogoutButtonProps {
+  onLogout: () => void;
+}
+
+const LogoutButton: React.FC<LogoutButtonProps> = ({ onLogout }) => {
+  const dispatch = useDispatch<AppDispatch>();
+
   const handleLogout = async () => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      await apiService.logout(token);
-      localStorage.removeItem('token');
-      window.location.href = '/login'; // or any other page
-    }
+    await dispatch(logout());
+    localStorage.removeItem('token');
+    onLogout(); // Call the onLogout callback
   };
 
   return (

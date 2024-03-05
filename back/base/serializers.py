@@ -36,4 +36,3 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         data['email'] = user.email
         data['is_active'] = user.is_active
         return data
-

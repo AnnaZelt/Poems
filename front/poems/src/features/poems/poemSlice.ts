@@ -2,48 +2,45 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { RootState } from '../../redux/store';
 import { apiService } from '../../api/apiService';
+import { Poem } from '../../types/poem';
 
-interface Poem {
-  input_id: number;
-  poem_text: string;
-}
-
-interface PoemsState {
-  currentPoem: Poem | null;
+interface PoemState {
   poems: Poem[];
-  status: 'idle' | 'loading' | 'succeeded' | 'failed';
 }
 
-const initialState: PoemsState = {
-  currentPoem: null,
+const initialState: PoemState = {
   poems: [],
-  status: 'idle'
 };
 
 export const fetchPoems = createAsyncThunk('poems/fetchPoems', async (_, { getState }) => {
   const { auth } = getState() as RootState;
-  const token = auth.token;
+  const token = auth.token; // Get the access token from the auth state
   const response = await apiService.getGeneratedPoems(token!);
   return response;
 });
 
 export const fetchPoemDetail = createAsyncThunk('poems/fetchPoemDetail', async (poemId: number, { getState }) => {
   const { auth } = getState() as RootState;
-  const token = auth.token;
+  const token = auth.token; // Get the access token from the auth state
   const response = await apiService.getPoemDetail(token!, poemId);
   return response;
 });
 
-export const createPoem = createAsyncThunk('poems/createPoem', async (data: { inputText: string; poetStyle: string }) => {
-  try {
-    const response = await apiService.createPoem(data.inputText, data.poetStyle);
-    return response;
-  } catch (error) {
-    console.error('Failed to create poem:', error);
-    throw error;
-  }
-});
+export const createPoem = createAsyncThunk(
+  'poems/createPoem',
+  async (data: { inputText: string; poetStyle: string; userId: number }, { getState }) => {
+    try {
+      const { auth } = getState() as RootState;
+      const token = auth.token; // Get the access token from the auth state
+      const response = await apiService.createPoem(data.inputText, data.poetStyle, data.userId, token!);
 
+      return response;
+    } catch (error) {
+      console.error('Failed to create poem:', error);
+      throw error;
+    }
+  }
+);
 
 const poemSlice = createSlice({
   name: 'poems',

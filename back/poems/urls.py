@@ -1,9 +1,7 @@
 from django.contrib import admin
 from django.urls import path, include
-from rest_framework_simplejwt.views import (
-    TokenObtainPairView,
-    TokenRefreshView,
-)
+from rest_framework_simplejwt.views import TokenRefreshView
+from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import views as auth_views
 from base import views
 
@@ -12,7 +10,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/token/', views.CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    path('api/token/logout/', auth_views.LogoutView.as_view(), name='logout'),
+    path('api/token/logout/', csrf_exempt(auth_views.LogoutView.as_view()), name='logout'),
     path('api/input_list/', views.input_list),
     path('api/input/<int:pk>/', views.input_detail),
     path('api/generate_poem/', views.create_poem),

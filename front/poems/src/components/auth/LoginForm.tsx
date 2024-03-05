@@ -3,13 +3,19 @@ import { login } from '../../features/auth/authSlice';
 import { useState } from 'react';
 import { AppDispatch } from '../../redux/store';
 
-const LoginButton = () => {
+interface LoginFormProps {
+  onLogin: () => void;
+}
+
+const LoginForm: React.FC<LoginFormProps> = ({ onLogin }) => {
   const dispatch = useDispatch<AppDispatch>();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
   const handleLogin = () => {
-    dispatch(login({ username, password }));
+    dispatch(login({ username, password })).then(() => {
+      onLogin(); // Call onLogin after successful login
+    });
   };
 
   return (
@@ -31,4 +37,4 @@ const LoginButton = () => {
   );
 };
 
-export default LoginButton;
+export default LoginForm;
