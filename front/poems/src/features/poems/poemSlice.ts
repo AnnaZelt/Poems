@@ -3,13 +3,22 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { RootState } from '../../redux/store';
 import { apiService } from '../../api/apiService';
 import { Poem } from '../../types/poem';
+import { Token } from '../../types/token';
 
 interface PoemState {
   poems: Poem[];
+  token: Token | null;
+  refreshToken: string | null;
+  userId: number | null;
+  error: string | null;
 }
 
 const initialState: PoemState = {
   poems: [],
+  token: null,
+  refreshToken: null,
+  userId: null,
+  error: null,
 };
 
 export const fetchPoems = createAsyncThunk('poems/fetchPoems', async (_, { getState }) => {
@@ -23,16 +32,16 @@ export const fetchPoemDetail = createAsyncThunk('poems/fetchPoemDetail', async (
   const { auth } = getState() as RootState;
   const token = auth.token; // Get the access token from the auth state
   const response = await apiService.getPoemDetail(token!, poemId);
-  return response;
+  return { poem: response }; // Return the response as an object with the 'poem' key
 });
 
 export const createPoem = createAsyncThunk(
   'poems/createPoem',
-  async (data: { inputText: string; poetStyle: string; userId: number }, { getState }) => {
+  async (data: { inputText: string; poetStyle: string; userId: number | null }, { getState }) => {
     try {
       const { auth } = getState() as RootState;
-      const token = auth.token; // Get the access token from the auth state
-      const response = await apiService.createPoem(data.inputText, data.poetStyle, data.userId, token!);
+      const token = auth.token;
+      const response = await apiService.createPoem(data.inputText, data.poetStyle, data.userId, token);
 
       return response;
     } catch (error) {
@@ -41,6 +50,7 @@ export const createPoem = createAsyncThunk(
     }
   }
 );
+
 
 const poemSlice = createSlice({
   name: 'poems',
@@ -51,14 +61,7 @@ const poemSlice = createSlice({
       state.poems = action.payload;
     });
     builder.addCase(fetchPoemDetail.fulfilled, (state, action) => {
-      // Assuming the payload is a single poem
-      const poem = action.payload;
-      const existingIndex = state.poems.findIndex((p) => p.input_id === poem.id);
-      if (existingIndex !== -1) {
-        state.poems[existingIndex] = poem; // Update existing poem
-      } else {
-        state.poems.push(poem); // Add new poem if not found
-      }
+      state.poems.push(action.payload.poem); // Push the 'poem' from the payload to the 'poems' array
     });
     builder.addCase(createPoem.fulfilled, (state, action) => {
       state.poems.push(action.payload);

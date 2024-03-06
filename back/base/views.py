@@ -3,8 +3,10 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.permissions import AllowAny
+from django.forms import ValidationError
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import make_password
+from django.contrib.auth.password_validation import validate_password
 from .models import Input, GeneratedPoem
 from .serializers import InputSerializer, GeneratedPoemSerializer, UserSerializer, CustomTokenObtainPairSerializer
 from poems.gpt_model import generate_poem
@@ -13,7 +15,6 @@ User = get_user_model()
 
 class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
-
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
@@ -29,8 +30,7 @@ def register(request):
             user = user_serializer.save()
             return Response(user_serializer.data, status=201)
         return Response(user_serializer.errors, status=400)
-
-        
+    
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -79,19 +79,16 @@ def generated_poem_list(request):
     serializer = GeneratedPoemSerializer(poems, many=True)
     return Response(serializer.data)
 
-from django.contrib.auth.models import AnonymousUser
-
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def create_poem(request):
     input_text = request.data.get('input_text', '')
     poet_style = request.data.get('poet_style', '')
-    
-    user_id = None
+
     if request.user.is_authenticated:
         user_id = request.user.id
-
-    print(input_text, poet_style, user_id)
+    else:
+        user_id = None
     input_serializer = InputSerializer(data={'user': user_id, 'input_text': input_text})
     if input_serializer.is_valid():
         input_obj = input_serializer.save()
@@ -100,7 +97,6 @@ def create_poem(request):
         poem_serializer = GeneratedPoemSerializer(data={'user': user_id, 'input': input_obj.id, 'poem_text': generated_poem_text})
         if poem_serializer.is_valid():
             poem_serializer.save()
-            print(poem_serializer.data)
             return Response(poem_serializer.data, status=201)
         # If poem_serializer is not valid, set the input object to inactive
         input_obj.is_active = False
@@ -108,7 +104,6 @@ def create_poem(request):
         return Response(poem_serializer.errors, status=400)
 
     return Response(input_serializer.errors, status=400)
-
 
 
 @api_view(['GET', 'PUT', 'DELETE'])

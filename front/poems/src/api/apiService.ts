@@ -1,4 +1,3 @@
-import { access } from "fs";
 import User from "../features/users/userSlice";
 import { Token } from "../types/token";
 
@@ -6,24 +5,52 @@ import { Token } from "../types/token";
 export const API_BASE_URL = 'http://127.0.0.1:8000/api/';
 
 export const apiService = {
+  async register(username: string, password: string, email: string, token: Token | null) {
+    try {
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+      };
+  
+      if (token) {
+        headers['Authorization'] = `Bearer ${token.access}`;
+      }
+  
+      const response = await fetch(`${API_BASE_URL}register/`, {
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify({ username, password, email }),
+      });
+  
+      if (!response.ok) {
+        throw new Error('Registration failed');
+      }
+  
+      const responseData = await response.json();
+      return responseData.access; // Return the 'access' token
+    } catch (error) {
+      console.error('Failed to register:', error);
+      throw error;
+    }
+  },
+  
   async login(username: string, password: string) {
     const response = await fetch(`${API_BASE_URL}token/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-     },
+      },
       body: JSON.stringify({ username, password }),
     });
-  
+
     if (!response.ok) {
       throw new Error('Login failed');
-    
+
     }
 
     const responseData = await response.json();
     return responseData // Return the 'access' token
   },
-  
+
 
   async logout(refreshToken: Token) {
     const response = await fetch(`${API_BASE_URL}token/logout/`, {
@@ -81,35 +108,31 @@ export const apiService = {
   },
 
 
-  async createPoem(inputText: string, poetStyle: string, userId: number, token: Token) {
-    console.log('api token: ', token.access);
-    
+  async createPoem(inputText: string, poetStyle: string, userId: number | null, token: Token | null) {
     try {
-        const response = await fetch(`${API_BASE_URL}generate_poem/`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token.access}`,
-            },
-            body: JSON.stringify({ input_text: inputText, poet_style: poetStyle, user: userId }),
-        });
-        console.log(JSON.stringify({ input_text: inputText, poet_style: poetStyle, user: userId }));
-        
-        if (!response.ok) {
-            throw new Error(`Failed to create poem: ${response.status} - ${response.statusText}`);
-        }
-        const responseData = await response.json();
-        console.log('api: ', responseData);
-        // Wait for the response data
-        return responseData; // Return the response data
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+      };
+      
+      if (token) {
+        headers['Authorization'] = `Bearer ${token.access}`;
+      }
+  
+      const response = await fetch(`${API_BASE_URL}generate_poem/`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ input_text: inputText, poet_style: poetStyle, user: userId }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to create poem, api: ${response.status} - ${response.statusText}`);
+      }
+      const responseData = await response.json();
+      return responseData;
     } catch (error) {
-        console.error('Failed to create poem:', error);
-        throw error; // Rethrow the error to be caught by the calling code
+      throw error;
     }
   },
-  
-
-  
 
   async getUsers(token: Token) {
     const response = await fetch(`${API_BASE_URL}user_list/`, {
@@ -144,7 +167,7 @@ export const apiService = {
     });
     return await response.json();
   },
-  
+
   async deleteUser(token: Token, userId: number) {
     const response = await fetch(`${API_BASE_URL}user/${userId}/`, {
       method: 'DELETE',
@@ -155,6 +178,6 @@ export const apiService = {
     });
     return await response.json();
   },
-  
+
   // Add other API calls as needed
 };

@@ -1,28 +1,27 @@
 import React, { useState } from 'react';
 import { createPoem } from '../../features/poems/poemSlice';
-import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { Token } from '../../types/token';
+import { AppDispatch } from '../../redux/store';
+import { useDispatch } from 'react-redux';
+
 
 
 const Poem: React.FC = () => {
   const [inputText, setInputText] = useState('');
   const [poetStyle, setPoetStyle] = useState('');
-  const dispatch = useAppDispatch();
+  const dispatch = useDispatch<AppDispatch>();
 
   const tokenString = localStorage.getItem('token');
   const token: Token = JSON.parse(tokenString!);
-
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Dispatch createPoem only if both inputText and poetStyle are not empty
     if (inputText.trim() !== '' && poetStyle.trim() !== '') {
-      dispatch(createPoem({ inputText, poetStyle, userId: token.id }));
-      console.log('poem: ',{ inputText, poetStyle, userId: token.id });
-      
+      dispatch(createPoem({ inputText, poetStyle, userId: token?.id ?? null }));
     }
     setInputText('');
     setPoetStyle('');
   };
+  
 
   return (
     <div>

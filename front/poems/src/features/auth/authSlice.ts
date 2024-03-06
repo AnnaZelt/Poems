@@ -22,6 +22,28 @@ interface LoginPayload {
   password: string;
 }
 
+interface RegisterPayload {
+  username: string;
+  password: string;
+  email: string
+}
+
+export const register = createAsyncThunk<void, RegisterPayload>(
+  'auth/register',
+  async ({ username, password, email }, { rejectWithValue, getState }) => {
+    try {
+      const { auth } = getState() as RootState;
+      const token = auth.token;
+      const response = await apiService.register(username, password, email, token!);
+      return response;
+    } catch (error) {
+      console.error('auth: Registration failed:', error);
+      return rejectWithValue((error as Error).message || 'Registration failed');
+    }
+  }
+);
+
+
 export const login = createAsyncThunk<Token, LoginPayload>(
   'auth/login',
   async ({ username, password }, { rejectWithValue }) => {

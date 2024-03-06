@@ -1,9 +1,9 @@
-import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
+import { configureStore, ThunkAction, Action, Middleware } from '@reduxjs/toolkit';
 import inputsReducer from '../features/inputs/inputSlice';
 import poemsReducer from '../features/poems/poemSlice';
-import userReducer from '../features/users/userSlice'; // Assuming this is the correct import for the usersReducer
-import authReducer from '../features/auth/authSlice'; // Assuming this is the correct import for the authReducer
-import counterReducer from '../features/counter/counterSlice';
+import userReducer from '../features/users/userSlice';
+import authReducer from '../features/auth/authSlice';
+import loggerMiddleware from './middleware/logger';
 
 export const store = configureStore({
   reducer: {
@@ -11,8 +11,9 @@ export const store = configureStore({
     poems: poemsReducer,
     users: userReducer,
     auth: authReducer,
-    counter: counterReducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(loggerMiddleware as Middleware),
 });
 
 export type AppDispatch = typeof store.dispatch;

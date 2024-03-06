@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { AppDispatch, RootState } from '../../redux/store';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '../../redux/store';
 import { fetchUserDetail } from '../../features/users/userSlice';
 import { Token } from '../../types/token';
+import { fetchPoemDetail, fetchPoems } from '../../features/poems/poemSlice';
 
 interface UserProps {
   userId: number;
 }
-
 
 const User: React.FC<UserProps> = ({ userId }) => {
   const [loading, setLoading] = useState(true);
@@ -19,7 +19,14 @@ const User: React.FC<UserProps> = ({ userId }) => {
 
   useEffect(() => {
     if (token && !tokenReceived) {
-      dispatch(fetchUserDetail(token.id));
+      dispatch(fetchUserDetail(token.id!));
+      setTokenReceived(true);
+    }
+  }, [token, tokenReceived, dispatch]);
+
+  useEffect(() => {
+    if (token && !tokenReceived) {
+      dispatch(fetchPoems());
       setTokenReceived(true);
     }
   }, [token, tokenReceived, dispatch]);

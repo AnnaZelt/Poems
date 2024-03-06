@@ -1,8 +1,8 @@
 export interface Token {
-    access: string;
-    refresh: string;
-    id: number;
-    username: string;
-    email: string;
-    is_active: boolean;
-  }
+  access: string | null;
+  refresh: string | null;
+  id: number | null;
+  username: string | null;
+  email: string | null;
+  is_active: boolean | null;
+}

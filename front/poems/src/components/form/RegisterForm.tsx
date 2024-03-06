@@ -1,20 +1,21 @@
 import { useDispatch } from 'react-redux';
-import { login } from '../../features/auth/authSlice';
+import { register } from '../../features/auth/authSlice';
 import { useState } from 'react';
 import { AppDispatch } from '../../redux/store';
 
-interface LoginFormProps {
-  onLogin: () => void;
+interface RegisterFormProps {
+  onRegister: () => void;
 }
 
-const LoginForm: React.FC<LoginFormProps> = ({ onLogin }) => {
+const RegisterForm: React.FC<RegisterFormProps> = ({ onRegister }) => {
   const dispatch = useDispatch<AppDispatch>();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('');
 
-  const handleLogin = () => {
-    dispatch(login({ username, password })).then(() => {
-      onLogin();
+  const handleRegister = () => {
+    dispatch(register({ username, password, email })).then(() => {
+      onRegister(); // Call onLogin after successful login
     });
   };
 
@@ -32,9 +33,15 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin }) => {
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
-      <button onClick={handleLogin}>Login</button>
+      <input
+        type="email"
+        placeholder="Email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+      />
+      <button onClick={handleRegister}>Register</button>
     </div>
   );
 };
 
-export default LoginForm;
+export default RegisterForm;
