@@ -58,6 +58,7 @@ export const login = createAsyncThunk<Token, LoginPayload>(
   }
 );
 
+
 export const logout = createAsyncThunk<void, void>(
   'auth/logout',
   async (_, { getState }) => {
@@ -67,7 +68,6 @@ export const logout = createAsyncThunk<void, void>(
     return response;
   }
 );
-
 
 
 const authSlice = createSlice({
@@ -86,8 +86,8 @@ const authSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(login.fulfilled, (state, action) => {
-      const { access, id } = action.payload;
-      state.token = { access, refresh: '', id, username: '', email: '', is_active: true }; // Update the token object
+      const { access, id, username, email, is_active } = action.payload;
+      state.token = { access, refresh: '', id, username: username, email: email, is_active: is_active };
       state.userId = id;
       state.error = null;
     });
@@ -97,11 +97,12 @@ const authSlice = createSlice({
       state.error = null;
     });
     builder.addCase(login.rejected, (state, action) => {
+      state.token = null;
+      state.userId = null;
       state.error = action.payload as string;
     });
   },
 });
-
 
 export const { setToken, setUserId, setError } = authSlice.actions;
 export const selectToken = (state: { auth: AuthState }) => state.auth.token;

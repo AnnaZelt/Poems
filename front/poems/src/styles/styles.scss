@@ -1,0 +1,55 @@
+// styles/styles.scss
+
+// Import Bootstrap's default styles
+@import "~bootstrap/dist/css/bootstrap.min.css";
+
+// Define pastel colors
+$light-blue: #a0d8ef;
+$light-pink: #f7cad0;
+$light-green: #c3e6cb;
+
+// Custom styles for a literary and writing-themed app
+body {
+  font-family: 'Georgia', serif;
+  font-size: 16px;
+  line-height: 1.5;
+  background-color: $light-blue; // Set background color to light blue
+  color: #333; // Set text color to dark gray
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  background-color: #fff; // Set container background color to white
+  padding: 20px;
+  border-radius: 10px; // Add border radius to container
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Playfair Display', serif;
+  font-weight: bold;
+  color: $light-green; // Set heading color to light green
+}
+
+p {
+  font-family: 'Georgia', serif;
+  color: #555; // Set paragraph color to a slightly darker gray
+}
+
+.popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    padding: 20px;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 9999;
+  }
+  
+  .popup-content {
+    font-family: 'Courier New', monospace;
+    white-space: pre-wrap;
+  }
+  

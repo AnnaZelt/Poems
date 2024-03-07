@@ -1,42 +1,40 @@
 import { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { AppDispatch, RootState } from './redux/store';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from './redux/store';
 import NavbarIn from './components/users/NavbarIn';
 import NavbarOut from './components/users/NavbarOut';
 import Poem from './components/poems/Poem';
 import User from './components/users/User';
-import { setToken, setUserId } from './features/auth/authSlice';
+import { setError} from './features/auth/authSlice';
 import PoemList from './components/poems/PoemList';
+import './styles/styles.scss';
 
 function App() {
-  const token = useSelector((state: RootState) => state.auth.token);
-  const [isLoggedIn, setIsLoggedIn] = useState(!!token);
   const [showMessage, setShowMessage] = useState(false);
   const [messageContent, setMessageContent] = useState('');
+  const [tokenNotNull, setTokenChanged] = useState(false); // State to track token changes
   const dispatch = useDispatch<AppDispatch>();
+  const token = JSON.parse(localStorage.getItem('token')!);
+  const userId = localStorage.getItem('userId');
 
   useEffect(() => {
-    const token = JSON.parse(localStorage.getItem('token')!);
-    const userId = localStorage.getItem('userId');
-    if (token && userId) {
-      dispatch(setToken(token));
-      dispatch(setUserId(Number(userId)));
-      setIsLoggedIn(true); // Update isLoggedIn state when token is found
-    }
-  }, [dispatch]);
+    if (token) {
+      setTokenChanged(true);
+        }
+  }, [tokenNotNull]);
 
   const handleLogin = () => {
-    setIsLoggedIn(true);
-    // Any other logic you want to perform after login
+      setTokenChanged(true);
+      if (!token){
+      dispatch(setError('Token is missing'));
+    }
   };
 
   const handleLogout = () => {
-    setIsLoggedIn(false);
-    // Any other logic you want to perform after logout
+    setTokenChanged(false); // Set tokenChanged to trigger reload
   };
 
   const handleRegister = () => {
-    setIsLoggedIn(false);
     setMessageContent('Registration successful!');
     setShowMessage(true);
     setTimeout(() => {
@@ -47,30 +45,30 @@ function App() {
   function handleFetchPoems(): void {
     return;
   }
-  
+
   function handleFetchPoemDetail(): void {
     return;
   }
 
   return (
-    <div>
-      {isLoggedIn ? (
+    <div className="container mt-4">
+      {token ? (
         <div>
-          <User userId={Number(localStorage.getItem('userId'))} />
+          <User userId={Number(userId)} />
           <Poem />
           <NavbarIn onLogout={handleLogout} />
-          <PoemList 
-          onFetchPoems={handleFetchPoems}
-          onFetchPoemDetail={handleFetchPoemDetail}
+          <PoemList
+            onFetchPoems={handleFetchPoems}
+            onFetchPoemDetail={handleFetchPoemDetail}
           />
         </div>
       ) : (
         <div>
-                {showMessage && (
-        <div>
-          <p>{messageContent}</p>
-        </div>
-      )}
+          {showMessage && (
+            <div className="alert alert-success" role="alert">
+              {messageContent}
+            </div>
+          )}
           <Poem />
           <NavbarOut
             onLogin={handleLogin}

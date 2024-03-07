@@ -16,22 +16,17 @@ const initialState: InputsState = {
   inputs: [],
 };
 
-export const fetchInputs = createAsyncThunk('inputs/fetchInputs', async (_, { getState }) => {
-  const { auth } = getState() as RootState;
-  const token = auth.token;
-  const response = await apiService.getInputs(token!);
-  return response;
-});
+// export const fetchInputs = createAsyncThunk('inputs/fetchInputs', async (_, { getState }) => {
+//   const { auth } = getState() as RootState;
+//   const token = auth.token;
+//   const response = await apiService.getInputs(token!);
+//   return response;
+// });
 
 const inputsSlice = createSlice({
   name: 'inputs',
   initialState,
   reducers: {},
-  extraReducers: (builder) => {
-    builder.addCase(fetchInputs.fulfilled, (state, action) => {
-      state.inputs = action.payload;
-    });
-  },
 });
 
 export const selectInputs = (state: RootState) => state.inputs.inputs;

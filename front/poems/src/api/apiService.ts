@@ -63,27 +63,27 @@ export const apiService = {
     return await response.json();
   },
 
-  async getInputs(token: Token) {
-    const response = await fetch(`${API_BASE_URL}input_list/`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token.access}`,
-      },
-    });
-    return await response.json();
-  },
+  // async getInputs(token: Token) {
+  //   const response = await fetch(`${API_BASE_URL}input_list/`, {
+  //     method: 'GET',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //       Authorization: `Bearer ${token.access}`,
+  //     },
+  //   });
+  //   return await response.json();
+  // },
 
-  async getInputDetail(token: Token, inputId: number) {
-    const response = await fetch(`${API_BASE_URL}input/${inputId}/`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token.access}`,
-      },
-    });
-    return await response.json();
-  },
+  // async getInputDetail(token: Token, inputId: number) {
+  //   const response = await fetch(`${API_BASE_URL}input/${inputId}/`, {
+  //     method: 'GET',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //       Authorization: `Bearer ${token.access}`,
+  //     },
+  //   });
+  //   return await response.json();
+  // },
 
   async getGeneratedPoems(token: Token) {
     const response = await fetch(`${API_BASE_URL}generated_poem_list/`, {
@@ -134,16 +134,16 @@ export const apiService = {
     }
   },
 
-  async getUsers(token: Token) {
-    const response = await fetch(`${API_BASE_URL}user_list/`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token.access}`,
-      },
-    });
-    return await response.json();
-  },
+  // async getUsers(token: Token) {
+  //   const response = await fetch(`${API_BASE_URL}user_list/`, {
+  //     method: 'GET',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //       Authorization: `Bearer ${token.access}`,
+  //     },
+  //   });
+  //   return await response.json();
+  // },
 
   async getUserDetail(token: Token, userId: number) {
     const response = await fetch(`${API_BASE_URL}user/${userId}/`, {
@@ -178,6 +178,4 @@ export const apiService = {
     });
     return await response.json();
   },
-
-  // Add other API calls as needed
 };

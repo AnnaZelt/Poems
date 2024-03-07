@@ -12,10 +12,9 @@ const initialState: UserState = {
   users: {},
 };
 
-
 export const updateUser = createAsyncThunk<User, { token: Token; userId: number; userData: Partial<User> }>(
   'users/updateUser',
-  async (data, { dispatch }) => {
+  async (data) => {
     const { token, userId, userData } = data;
     const updatedUser = await apiService.updateUser(token, userId, userData);
     // Update the user in the state
@@ -23,12 +22,14 @@ export const updateUser = createAsyncThunk<User, { token: Token; userId: number;
   }
 );
 
-export const fetchUsers = createAsyncThunk<User[]>('users/fetchUsers', async (_, { getState }) => {
-  const { auth } = getState() as RootState;
-  const token = auth.token!;
-  const response = await apiService.getUsers(token);
-  return response;
-});
+export const deleteUser = createAsyncThunk<User, { token: Token; userId: number; }>(
+  'users/deleteUser',
+  async (data) => {
+    const { token, userId } = data;
+    const removedUser = await apiService.deleteUser(token, userId);
+    return removedUser;
+  }
+);
 
 export const fetchUserDetail = createAsyncThunk<User, number>('users/fetchUserDetail', async (userId, { getState }) => {
   const { auth } = getState() as RootState;
@@ -36,6 +37,13 @@ export const fetchUserDetail = createAsyncThunk<User, number>('users/fetchUserDe
   const response = await apiService.getUserDetail(token, userId);
   return response;
 });
+
+// export const fetchUsers = createAsyncThunk<User[]>('users/fetchUsers', async (_, { getState }) => {
+//   const { auth } = getState() as RootState;
+//   const token = auth.token!;
+//   const response = await apiService.getUsers(token);
+//   return response;
+// });
 
 const userSlice = createSlice({
   name: 'users',
@@ -49,13 +57,6 @@ const userSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(fetchUsers.fulfilled, (state, action) => {
-      action.payload.forEach((user) => {
-        if (user.id !== null) {
-          state.users[user.id] = user; // Add users to the normalized state
-        }
-      });
-    });
     builder.addCase(fetchUserDetail.fulfilled, (state, action) => {
       const user = action.payload;
       if (user.id !== null) {
@@ -65,5 +66,6 @@ const userSlice = createSlice({
   },
 });
 
+export const { setUser, clearUser } = userSlice.actions;
 export const selectUsers = (state: RootState) => Object.values(state.users);
 export default userSlice.reducer;

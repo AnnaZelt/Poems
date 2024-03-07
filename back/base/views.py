@@ -32,41 +32,41 @@ def register(request):
         return Response(user_serializer.errors, status=400)
     
 
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def input_list(request):
-    if request.user.is_superuser:
-        inputs = Input.objects.all()
-    else:
-        inputs = Input.objects.filter(user=request.user)
+# @api_view(['GET'])
+# @permission_classes([IsAuthenticated])
+# def input_list(request):
+#     if request.user.is_superuser:
+#         inputs = Input.objects.all()
+#     else:
+#         inputs = Input.objects.filter(user=request.user)
 
-    serializer = InputSerializer(inputs, many=True)
-    return Response(serializer.data)
+#     serializer = InputSerializer(inputs, many=True)
+#     return Response(serializer.data)
 
-@api_view(['GET', 'PUT', 'DELETE'])
-@permission_classes([IsAuthenticated])
-def input_detail(request, pk):
-    try:
-        input_obj = Input.objects.get(pk=pk)
-    except Input.DoesNotExist:
-        return Response(status=404)
+# @api_view(['GET', 'PUT', 'DELETE'])
+# @permission_classes([IsAuthenticated])
+# def input_detail(request, pk):
+#     try:
+#         input_obj = Input.objects.get(pk=pk)
+#     except Input.DoesNotExist:
+#         return Response(status=404)
 
-    if request.user.is_superuser or request.user == input_obj.user:
-        if request.method == 'GET':
-            serializer = InputSerializer(input_obj)
-            return Response(serializer.data)
-        elif request.method == 'PUT':
-            serializer = InputSerializer(input_obj, data=request.data)
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data)
-            return Response(serializer.errors, status=400)
-        elif request.method == 'DELETE':
-            input_obj.is_active = False
-            input_obj.save()
-            return Response(status=204)
-    else:
-        return Response({"message": "You do not have permission to perform this action"}, status=403)
+#     if request.user.is_superuser or request.user == input_obj.user:
+#         if request.method == 'GET':
+#             serializer = InputSerializer(input_obj)
+#             return Response(serializer.data)
+#         elif request.method == 'PUT':
+#             serializer = InputSerializer(input_obj, data=request.data)
+#             if serializer.is_valid():
+#                 serializer.save()
+#                 return Response(serializer.data)
+#             return Response(serializer.errors, status=400)
+#         elif request.method == 'DELETE':
+#             input_obj.is_active = False
+#             input_obj.save()
+#             return Response(status=204)
+#     else:
+#         return Response({"message": "You do not have permission to perform this action"}, status=403)
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -131,16 +131,16 @@ def generated_poem_detail(request, pk):
     else:
         return Response({"message": "You do not have permission to perform this action"}, status=403)
 
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def user_list(request):
-    if request.user.is_superuser:
-        users = User.objects.all()
-    else:
-        users = User.objects.filter(user=request.user)
+# @api_view(['GET'])
+# @permission_classes([IsAuthenticated])
+# def user_list(request):
+#     if request.user.is_superuser:
+#         users = User.objects.all()
+#     else:
+#         users = User.objects.filter(user=request.user)
 
-    serializer = UserSerializer(users, many=True)
-    return Response(serializer.data)
+#     serializer = UserSerializer(users, many=True)
+#     return Response(serializer.data)
 
 @api_view(['GET', 'PUT', 'DELETE'])
 @permission_classes([IsAuthenticated])

@@ -1,4 +1,5 @@
 // features/poems/poemSlice.ts
+
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { RootState } from '../../redux/store';
 import { apiService } from '../../api/apiService';
@@ -7,6 +8,7 @@ import { Token } from '../../types/token';
 
 interface PoemState {
   poems: Poem[];
+  selectedPoem: Poem | null; // Add a new field for storing the selected poem details
   token: Token | null;
   refreshToken: string | null;
   userId: number | null;
@@ -15,6 +17,7 @@ interface PoemState {
 
 const initialState: PoemState = {
   poems: [],
+  selectedPoem: null,
   token: null,
   refreshToken: null,
   userId: null,
@@ -32,7 +35,7 @@ export const fetchPoemDetail = createAsyncThunk('poems/fetchPoemDetail', async (
   const { auth } = getState() as RootState;
   const token = auth.token; // Get the access token from the auth state
   const response = await apiService.getPoemDetail(token!, poemId);
-  return { poem: response }; // Return the response as an object with the 'poem' key
+  return response;
 });
 
 export const createPoem = createAsyncThunk(
@@ -55,13 +58,20 @@ export const createPoem = createAsyncThunk(
 const poemSlice = createSlice({
   name: 'poems',
   initialState,
-  reducers: {},
+  reducers: {
+    selectPoem: (state, action) => {
+      state.selectedPoem = action.payload;
+    },
+    clearSelectedPoem: (state) => {
+      state.selectedPoem = null;
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(fetchPoems.fulfilled, (state, action) => {
       state.poems = action.payload;
     });
     builder.addCase(fetchPoemDetail.fulfilled, (state, action) => {
-      state.poems.push(action.payload.poem); // Push the 'poem' from the payload to the 'poems' array
+      state.selectedPoem = action.payload; // Update selectedPoem with the fetched poem details
     });
     builder.addCase(createPoem.fulfilled, (state, action) => {
       state.poems.push(action.payload);
@@ -75,5 +85,8 @@ const poemSlice = createSlice({
   },
 });
 
+export const { selectPoem, clearSelectedPoem } = poemSlice.actions;
+
 export const selectPoems = (state: RootState) => state.poems.poems;
+export const selectSelectedPoem = (state: RootState) => state.poems.selectedPoem; // Selector for accessing the selected poem details
 export default poemSlice.reducer;
