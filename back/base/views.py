@@ -155,16 +155,23 @@ def user_detail(request, pk):
             serializer = UserSerializer(user)
             return Response(serializer.data)
         elif request.method == 'PUT':
-            password = request.data.get('password', '')
-            request.data['password'] = make_password(password)
-            serializer = UserSerializer(user, data=request.data, partial = True)
+            # Extract the password from request data if present
+            password = request.data.pop('password', None)
+
+            # If a new password is provided, hash it and update the request data
+            if password:
+                request.data['password'] = make_password(password)
+
+            # Use partial update to allow updating other fields without the password
+            serializer = UserSerializer(user, data=request.data, partial=True)
+
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data)
             return Response(serializer.errors, status=400)
         elif request.method == 'DELETE':
-            user.is_active = False
-            user.save()
-            return Response(status=204)
+                    user.is_active = False
+                    user.save()
+                    return Response(status=204)
     else:
         return Response({"message": "You do not have permission to perform this action"}, status=403)

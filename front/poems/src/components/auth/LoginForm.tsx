@@ -16,6 +16,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin }) => {
   const handleLogin = () => {
     dispatch(login({ username, password })).then(() => {
       setLoginClick(true);
+      // window.location.reload();
     });
   };
 

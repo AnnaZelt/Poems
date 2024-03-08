@@ -18,9 +18,10 @@ interface NavbarInProps {
   userData: Partial<User>;
 }
 
-const NavbarIn: React.FC<NavbarInProps> = ({ onLogout, onUpdate, onDelete, token, userId, userData }) => {
+const NavbarIn: React.FC<NavbarInProps> = ({ onUpdate, onDelete, token, userId, userData }) => {
   const [tokenReceived, setTokenReceived] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (token && !tokenReceived) {
@@ -29,11 +30,15 @@ const NavbarIn: React.FC<NavbarInProps> = ({ onLogout, onUpdate, onDelete, token
     }
   }, [token, tokenReceived, dispatch]);
 
+  const handleLogout = () => {
+    setLoading(true);
+  };
+
   return (
     <nav>
       <UpdateForm onUpdate={onUpdate} token={token} userId={userId} userData={userData} />
       <DeleteButton onDelete={onDelete} token={token} userId={userId} />
-      <LogoutButton onLogout={onLogout} />
+      <LogoutButton onLogout={handleLogout} />
     </nav>
   );
 };

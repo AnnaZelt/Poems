@@ -53,14 +53,13 @@ export const apiService = {
 
 
   async logout(refreshToken: Token) {
-    const response = await fetch(`${API_BASE_URL}token/logout/`, {
+    await fetch(`${API_BASE_URL}token/logout/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ refresh: refreshToken.refresh }),
     });
-    return await response.json();
   },
 
   // async getInputs(token: Token) {

@@ -3,6 +3,7 @@ import {  useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
 import NavbarIn from './NavbarIn';
 import PoemList from '../poems/PoemList';
+import { Token } from '../../types/token';
 
 interface UserProps {
   userId: number;
@@ -16,7 +17,7 @@ const User: React.FC<UserProps> = ({ userId }) => {
   const [tokenReceived, setTokenReceived] = useState(false);
   const [showNavbar, setShowNavbar] = useState(false); // State to control navbar visibility
   const [showPoems, setShowPoems] = useState(true); // State to control navbar visibility
-  const token = useSelector((state: RootState) => state.auth.token);
+  const token: Token | null = useSelector((state: RootState) => state.auth.token);
 
   useEffect(() => {
     if (tokenReceived) {
@@ -57,18 +58,13 @@ const User: React.FC<UserProps> = ({ userId }) => {
     
   }
 
-  if (!token) {
-    return <p>Error: Token not found</p>;
-  }
-
   const toggleNavbarVisibility = () => {
     setShowNavbar((prevShowNav) => !prevShowNav); // Toggle the state between true and false
   };
 
-
   return (
     <div>
-      <h2>Welcome, {token.username}</h2>
+      <h2>Welcome, {token?.username}</h2>
       <PoemList 
       onFetchPoems={handleShowPoems} 
       onFetchPoemDetail={handleFetchPoemDetail} 
@@ -77,7 +73,7 @@ const User: React.FC<UserProps> = ({ userId }) => {
       <button onClick={showNavbar ? toggleNavbarVisibility : handleShowNavbar}>
       {showNavbar ? 'Close Navbar' : 'Show Navbar'}
       </button>
-      {showNavbar && (
+      {showNavbar && token! && (
         <NavbarIn
           onLogout={handleLogout}
           onUpdate={handleUpdate}

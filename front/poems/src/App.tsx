@@ -1,11 +1,10 @@
-// App component
-import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from './redux/store';
 import NavbarOut from './components/users/NavbarOut';
 import Poem from './components/poems/Poem';
 import User from './components/users/User';
-import { setError} from './features/auth/authSlice';
+import { AuthState, setError } from './features/auth/authSlice';
 import './styles/styles.scss';
 
 function App() {
@@ -18,14 +17,9 @@ function App() {
   const token = tokenString ? JSON.parse(tokenString) : null;
   const userIdString: string | null = token?.id || null;
   const userId: number | null = userIdString ? parseInt(userIdString, 10) : null;
+  const isLoggedIn = useSelector((state: { auth: AuthState }) => state.auth.isLoggedIn);
 
   <p>{tokenExpirationTime !== null ? `Token expires in ${Math.floor(tokenExpirationTime / 1000)} seconds` : ''}</p>
-
-  useEffect(() => {
-    if (token) {
-      setTokenChanged(true);
-    }
-  }, [tokenNotNull]);
 
   const startTokenTimer = () => {
     if (token && tokenExpirationTime === null) {
@@ -68,7 +62,7 @@ function App() {
 
   return (
     <div className="container mt-4">
-      {token ? (
+      {isLoggedIn ? (
         <div>
           <User userId={Number(userId)} />
           <Poem />

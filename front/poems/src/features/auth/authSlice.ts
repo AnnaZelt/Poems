@@ -3,7 +3,8 @@ import { apiService } from '../../api/apiService';
 import { RootState } from '../../redux/store';
 import { Token } from '../../types/token';
 
-interface AuthState {
+export interface AuthState {
+  isLoggedIn: boolean;
   token: Token | null;
   refreshToken: string | null;
   userId: number | null;
@@ -11,6 +12,7 @@ interface AuthState {
 }
 
 const initialState: AuthState = {
+  isLoggedIn: false,
   token: JSON.parse(localStorage.getItem('token') || 'null'), // Parse the stored token string to a token object
   refreshToken: localStorage.getItem('refresh') || 'null',
   userId: localStorage.getItem('userId') ? Number(localStorage.getItem('userId')) : null,
@@ -67,9 +69,7 @@ export const logout = createAsyncThunk<void, void>(
     const { auth } = getState() as RootState;
     const token = auth.token;    
     const response = await apiService.logout(token!);
-    console.log(response);
-    
-    return response;
+      return response;
   }
 );
 
@@ -78,6 +78,9 @@ const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
+    setIsLoggedIn(state, action: PayloadAction<boolean>) {
+      state.isLoggedIn = action.payload;
+    },
     setToken(state, action: PayloadAction<Token | null>) {
       state.token = action.payload;
     },
@@ -92,21 +95,31 @@ const authSlice = createSlice({
     builder.addCase(login.fulfilled, (state, action) => {
       state.token = action.payload;
       state.error = null;
-    });
-    builder.addCase(logout.fulfilled, (state) => {
-      state.token = null;
-      state.userId = null;
-      state.error = null;
+      state.isLoggedIn = true;
     });
     builder.addCase(login.rejected, (state, action) => {
       state.token = null;
       state.userId = null;
       state.error = action.payload as string;
+      state.isLoggedIn = false;
+    });
+    builder.addCase(logout.fulfilled, (state) => {
+      state.token = null;
+      state.userId = null;
+      state.error = null;
+      state.isLoggedIn = false;
+    });
+    builder.addCase(logout.rejected, (state, action) => {
+      console.log('Logout rejected:', action.payload); // Log the rejection payload
+      state.token = null;
+      state.userId = null;
+      state.error = action.payload as string;
+      state.isLoggedIn = false;
     });
   },
 });
 
-export const { setToken, setUserId, setError } = authSlice.actions;
+export const { setToken, setUserId, setError, setIsLoggedIn } = authSlice.actions;
 export const selectToken = (state: { auth: AuthState }) => state.auth.token;
 export const selectUserId = (state: { auth: AuthState }) => state.auth.userId;
 export const selectError = (state: { auth: AuthState }) => state.auth.error;
