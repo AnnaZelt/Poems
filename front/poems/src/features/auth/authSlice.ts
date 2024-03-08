@@ -49,7 +49,9 @@ export const login = createAsyncThunk<Token, LoginPayload>(
   async ({ username, password }, { rejectWithValue }) => {
     try {
       const token = await apiService.login(username, password);
+      const expirationTime = new Date().getTime() + 1498 * 1000; // Set expiration time to 1498 seconds from now
       localStorage.setItem('token', JSON.stringify(token)); // Store the token object
+      localStorage.setItem('tokenExpirationTime', expirationTime.toString()); // Store expiration time in milliseconds
       return token;
     } catch (error) {
       console.error('Login failed:', error);
@@ -63,8 +65,10 @@ export const logout = createAsyncThunk<void, void>(
   'auth/logout',
   async (_, { getState }) => {
     const { auth } = getState() as RootState;
-    const token = auth.token;
+    const token = auth.token;    
     const response = await apiService.logout(token!);
+    console.log(response);
+    
     return response;
   }
 );
@@ -86,9 +90,7 @@ const authSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(login.fulfilled, (state, action) => {
-      const { access, id, username, email, is_active } = action.payload;
-      state.token = { access, refresh: '', id, username: username, email: email, is_active: is_active };
-      state.userId = id;
+      state.token = action.payload;
       state.error = null;
     });
     builder.addCase(logout.fulfilled, (state) => {

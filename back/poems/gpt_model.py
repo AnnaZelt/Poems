@@ -26,9 +26,15 @@ def generate_poem(input_text, poet_style):
     max_length = 200  # Adjust the length as needed
     output = model.generate(input_ids, max_length=max_length, num_return_sequences=1, temperature=0.9, do_sample=True, pad_token_id=tokenizer.eos_token_id)
     generated_text = tokenizer.decode(output[0], skip_special_tokens=True)
+
+    # Remove the poet style text from the generated text
+    poet_style_text = poet_prompts.get(poet_style, "")
+    generated_text_parts = generated_text.split(poet_style_text)
+    generated_text = " ".join(generated_text_parts).strip()
+
     return generated_text
 
-# # Example usage
+# Example usage
 # custom_prompt = input("Enter your custom prompt: ")
 # poet_style = "HP_LOVECRAFT"
 # generated_poem = generate_poem(custom_prompt, poet_style)

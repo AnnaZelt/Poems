@@ -41,7 +41,7 @@ export const apiService = {
       },
       body: JSON.stringify({ username, password }),
     });
-
+    
     if (!response.ok) {
       throw new Error('Login failed');
 
@@ -107,6 +107,16 @@ export const apiService = {
     return await response.json();
   },
 
+  async deletePoem(token: Token, poemId: number) {
+    const response = await fetch(`${API_BASE_URL}generated_poem/${poemId}/`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token.access}`,
+      },
+    });
+    return await response.json();
+  },
 
   async createPoem(inputText: string, poetStyle: string, userId: number | null, token: Token | null) {
     try {

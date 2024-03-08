@@ -11,7 +11,7 @@ const LogoutButton: React.FC<LogoutButtonProps> = ({ onLogout }) => {
   const dispatch = useDispatch<AppDispatch>();
 
   const handleLogout = async () => {
-    await dispatch(logout());
+    dispatch(logout());
     localStorage.removeItem('token');
     onLogout(); // Call the onLogout callback
   };

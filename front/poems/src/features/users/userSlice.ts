@@ -16,6 +16,8 @@ export const updateUser = createAsyncThunk<User, { token: Token; userId: number;
   'users/updateUser',
   async (data) => {
     const { token, userId, userData } = data;
+    console.log(userData);
+    
     const updatedUser = await apiService.updateUser(token, userId, userData);
     // Update the user in the state
     return updatedUser;

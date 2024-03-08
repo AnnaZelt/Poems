@@ -11,10 +11,11 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin }) => {
   const dispatch = useDispatch<AppDispatch>();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [loginClick, setLoginClick] = useState<Boolean>(false)
 
   const handleLogin = () => {
     dispatch(login({ username, password })).then(() => {
-      onLogin();
+      setLoginClick(true);
     });
   };
 

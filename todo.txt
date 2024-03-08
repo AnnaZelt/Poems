@@ -1,0 +1,5 @@
+* page doesn't refresh on login, logout, update, delete
+
+* make sure to logout and delete token after delete
+
+* logout delete and update return rejected

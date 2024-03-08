@@ -38,6 +38,13 @@ export const fetchPoemDetail = createAsyncThunk('poems/fetchPoemDetail', async (
   return response;
 });
 
+export const deletePoem = createAsyncThunk('poems/deletePoem', async (poemId: number, { getState }) => {
+  const { auth } = getState() as RootState;
+  const token = auth.token; // Get the access token from the auth state
+  const response = await apiService.deletePoem(token!, poemId);
+  return response;
+});
+
 export const createPoem = createAsyncThunk(
   'poems/createPoem',
   async (data: { inputText: string; poetStyle: string; userId: number | null }, { getState }) => {
