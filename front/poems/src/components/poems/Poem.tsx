@@ -1,27 +1,35 @@
 import React, { useState } from 'react';
 import { createPoem } from '../../features/poems/poemSlice';
 import { Token } from '../../types/token';
-import { AppDispatch } from '../../redux/store';
-import { useDispatch } from 'react-redux';
-
-
+import { AppDispatch, RootState } from '../../redux/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { Poemtype } from '../../types/poem';
 
 const Poem: React.FC = () => {
   const [inputText, setInputText] = useState('');
   const [poetStyle, setPoetStyle] = useState('');
+  const [showPoem, setShowPoem] = useState(false);
+  const [poem, setPoem] = useState<Poemtype | null>(null);
   const dispatch = useDispatch<AppDispatch>();
+  const [loading, setLoading] = useState(false);
 
   const tokenString = localStorage.getItem('token');
   const token: Token = JSON.parse(tokenString!);
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoading(true);
     if (inputText.trim() !== '' && poetStyle.trim() !== '') {
-      dispatch(createPoem({ inputText, poetStyle, userId: token?.id ?? null }));
+      dispatch(createPoem({ inputText, poetStyle, userId: token?.id ?? null })).then((action) => {
+        if (createPoem.fulfilled.match(action)) {
+          setPoem(action.payload); // Update the poem state with the newly created poem
+          setShowPoem(true); // Show the poem
+        }
+      });
     }
     setInputText('');
     setPoetStyle('');
   };
-  
 
   return (
     <div>
@@ -46,6 +54,13 @@ const Poem: React.FC = () => {
         </select>
         <button type="submit">Submit</button>
       </form>
+      {loading && <div className="spinner"></div>}
+      {showPoem && poem && (
+        <div>
+          <p>{poem.poem_text}</p>
+          <button onClick={() => setShowPoem(false)}>Close</button>
+        </div>
+      )}
     </div>
   );
 };

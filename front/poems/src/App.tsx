@@ -4,13 +4,12 @@ import { AppDispatch } from './redux/store';
 import NavbarOut from './components/users/NavbarOut';
 import Poem from './components/poems/Poem';
 import User from './components/users/User';
-import { AuthState, setError } from './features/auth/authSlice';
+import { AuthState, setError, setIsLoggedIn } from './features/auth/authSlice';
 import './styles/styles.scss';
 
 function App() {
   const [showMessage, setShowMessage] = useState(false);
   const [messageContent, setMessageContent] = useState('');
-  const [tokenNotNull, setTokenChanged] = useState(false); // State to track token changes
   const [tokenExpirationTime, setTokenExpirationTime] = useState<number | null>(null); // State for token expiration countdown
   const dispatch = useDispatch<AppDispatch>();
   const tokenString = localStorage.getItem('token');
@@ -18,11 +17,14 @@ function App() {
   const userIdString: string | null = token?.id || null;
   const userId: number | null = userIdString ? parseInt(userIdString, 10) : null;
   const isLoggedIn = useSelector((state: { auth: AuthState }) => state.auth.isLoggedIn);
+  const [showNavbar, setShowNavbar] = useState(false);
 
-  <p>{tokenExpirationTime !== null ? `Token expires in ${Math.floor(tokenExpirationTime / 1000)} seconds` : ''}</p>
+  const toggleNavbarVisibility = () => {
+    setShowNavbar((prevShowNavbar) => !prevShowNavbar);
+  };
 
-  const startTokenTimer = () => {
-    if (token && tokenExpirationTime === null) {
+  useEffect(() => {
+    if (token) {
       const expiration = Number(localStorage.getItem('tokenExpirationTime'));
       const currentTime = Date.now();
       const timeLeft = expiration - currentTime;
@@ -40,16 +42,19 @@ function App() {
             }
           });
         }, 1000);
+      } else {
+        // Token has expired, logout the user
+        dispatch(setError('Token has expired'));
+        dispatch(setIsLoggedIn(false));
       }
     }
-  };
+  }, [token, dispatch]);
 
   const handleLogin = () => {
-    startTokenTimer();
-    setTokenChanged(true);
-    if (!token){
-      dispatch(setError('Token is missing'));
-    }
+    // Handle login logic here
+    // For example, set isLoggedIn to true after successful login
+    dispatch(setIsLoggedIn(true));    
+    // setTokenChanged(true);
   };
 
   const handleRegister = () => {
@@ -62,7 +67,10 @@ function App() {
 
   return (
     <div className="container mt-4">
-      {isLoggedIn ? (
+      <style>
+        
+      </style>
+      {token ? (
         <div>
           <User userId={Number(userId)} />
           <Poem />

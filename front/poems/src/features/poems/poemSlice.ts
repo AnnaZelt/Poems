@@ -3,12 +3,12 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { RootState } from '../../redux/store';
 import { apiService } from '../../api/apiService';
-import { Poem } from '../../types/poem';
+import { Poemtype } from '../../types/poem';
 import { Token } from '../../types/token';
 
 interface PoemState {
-  poems: Poem[];
-  selectedPoem: Poem | null; // Add a new field for storing the selected poem details
+  poems: Poemtype[];
+  selectedPoem: Poemtype | null; // Add a new field for storing the selected poem details
   token: Token | null;
   refreshToken: string | null;
   userId: number | null;
@@ -82,6 +82,7 @@ const poemSlice = createSlice({
     });
     builder.addCase(createPoem.fulfilled, (state, action) => {
       state.poems.push(action.payload);
+      state.selectedPoem = action.payload;
     });
     builder.addCase(createPoem.rejected, (state, action) => {
       console.log('createPoem rejected:', action.payload); // Log the rejection payload

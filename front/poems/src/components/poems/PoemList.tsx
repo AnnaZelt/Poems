@@ -14,9 +14,12 @@ interface PoemListProps {
   onFetchPoems: () => void;
 }
 
-const PoemList: React.FC<PoemListProps> = ({ onFetchPoemDetail, onDeletePoem }) => {
+// Define the poems outside of the component
+const poemsSelector = (state: RootState) => state.poems.poems;
+
+const PoemList: React.FC<PoemListProps> = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const poems = useSelector((state: RootState) => state.poems.poems);
+  const poems = useSelector(poemsSelector);
   const [selectedPoem, setSelectedPoem] = useState<string | null>(null);
   const [showPoems, setShowPoems] = useState(false); // State to track if poems are shown or not
 
@@ -47,24 +50,22 @@ const PoemList: React.FC<PoemListProps> = ({ onFetchPoemDetail, onDeletePoem }) 
 
   return (
     <div>
-      <h2>Poems</h2>
       <button onClick={showPoems ? togglePoemsVisibility : handleFetchPoems}>
-        {showPoems ? 'Close Poems' : 'Show Poems'}
+        {showPoems ? 'Close Poems' : 'Show My Poems'}
       </button>
       {showPoems && (
-  <ul>
-    {poems.map((poem) => (
-        poem.is_active ? (
-          <li key={uuidv4()}>
-            {poem.poem_text.length > 50 ? `${poem.poem_text.slice(0, 50)}...` : poem.poem_text}
-            <button onClick={() => handlePoemClick(poem.poem_text)}>Expand</button>
-            <button onClick={() => handleDeletePoem(poem.id)}>Delete</button>
-          </li>
-        ) : null
-      ))
-    }
-  </ul>
-)}
+        <ul>
+          {poems.map((poem) => (
+            poem.is_active ? (
+              <li key={uuidv4()}>
+                {poem.poem_text.length > 50 ? `${poem.poem_text.slice(0, 50)}...` : poem.poem_text}
+                <button onClick={() => handlePoemClick(poem.poem_text)}>Expand</button>
+                <button onClick={() => handleDeletePoem(poem.id)}>Delete</button>
+              </li>
+            ) : null
+          ))}
+        </ul>
+      )}
 
       {selectedPoem && (
         <div className="poem-popup">

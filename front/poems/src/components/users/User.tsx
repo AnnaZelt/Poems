@@ -64,7 +64,7 @@ const User: React.FC<UserProps> = ({ userId }) => {
 
   return (
     <div>
-      <h2>Welcome, {token?.username}</h2>
+      <h3>Welcome, {token?.username}</h3>
       <PoemList 
       onFetchPoems={handleShowPoems} 
       onFetchPoemDetail={handleFetchPoemDetail} 
@@ -75,7 +75,6 @@ const User: React.FC<UserProps> = ({ userId }) => {
       </button>
       {showNavbar && token! && (
         <NavbarIn
-          onLogout={handleLogout}
           onUpdate={handleUpdate}
           onDelete={handleDelete} // Pass onDelete callback
           token={token}

@@ -16,7 +16,7 @@ const initialState: AuthState = {
   token: JSON.parse(localStorage.getItem('token') || 'null'), // Parse the stored token string to a token object
   refreshToken: localStorage.getItem('refresh') || 'null',
   userId: localStorage.getItem('userId') ? Number(localStorage.getItem('userId')) : null,
-  error: null,
+  error: null
 };
 
 interface LoginPayload {

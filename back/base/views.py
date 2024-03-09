@@ -149,7 +149,7 @@ def user_detail(request, pk):
         user = User.objects.get(pk=pk)
     except User.DoesNotExist:
         return Response(status=404)
-
+    print(user_detail)
     if request.user.is_superuser or request.user == user:
         if request.method == 'GET':
             serializer = UserSerializer(user)
