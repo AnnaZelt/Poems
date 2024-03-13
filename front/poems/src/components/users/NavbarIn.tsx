@@ -1,5 +1,5 @@
 // NavbarIn component
-import React from 'react';
+import React, { useState } from 'react';
 import LogoutButton from '../auth/LogoutButton';
 import DeleteButton from './DeleteButton';
 import { Token } from '../../types/token';
@@ -12,23 +12,25 @@ import { logout } from '../../features/auth/authSlice';
 interface NavbarInProps {
   onUpdate: () => void;
   onDelete: () => void;
+  onLogout: () => void;
   token: Token;
   userId: number;
   userData: Partial<User>;
 }
 
-const NavbarIn: React.FC<NavbarInProps> = ({ onUpdate, onDelete, token, userId, userData }) => {
-  const dispatch = useDispatch<AppDispatch>();
+const NavbarIn: React.FC<NavbarInProps> = ({ onUpdate, onDelete, onLogout, token, userId, userData }) => {
+  const [showUpdateForm, setShowUpdateForm] = useState(false);
 
-  const handleLogout = () => {
-    dispatch(logout()); // Assuming you have a logout action
+  const toggleuUpdateForm = () => {
+    setShowUpdateForm((prev) => !prev);
   };
 
   return (
     <nav className="navbar-in">
-      <UpdateForm onUpdate={onUpdate} token={token} userId={userId} userData={userData} />
+      <button onClick={toggleuUpdateForm}>{showUpdateForm ? 'Close' : 'Update details '}</button>
+      {showUpdateForm && <UpdateForm onUpdate={onUpdate} token={token} userId={userId} userData={userData} />}
       <DeleteButton onDelete={onDelete} token={token} userId={userId} />
-      <LogoutButton onLogout={handleLogout} />
+      <LogoutButton onLogout={onLogout} />
     </nav>
   );
 };

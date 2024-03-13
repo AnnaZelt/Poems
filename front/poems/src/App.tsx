@@ -6,6 +6,7 @@ import Poem from './components/poems/Poem';
 import User from './components/users/User';
 import { AuthState, setError, setIsLoggedIn } from './features/auth/authSlice';
 import './styles/styles.scss';
+import NavbarIn from './components/users/NavbarIn';
 
 function App() {
   const [showMessage, setShowMessage] = useState(false);
@@ -17,11 +18,8 @@ function App() {
   const userIdString: string | null = token?.id || null;
   const userId: number | null = userIdString ? parseInt(userIdString, 10) : null;
   const isLoggedIn = useSelector((state: { auth: AuthState }) => state.auth.isLoggedIn);
-  const [showNavbar, setShowNavbar] = useState(false);
+  const [tokenNotNull, setTokenChanged] = useState(false); // State to track token changes
 
-  const toggleNavbarVisibility = () => {
-    setShowNavbar((prevShowNavbar) => !prevShowNavbar);
-  };
 
   useEffect(() => {
     if (token) {
@@ -65,30 +63,58 @@ function App() {
     }, 2000); // Hide the message after 5 seconds
   };
 
+  const handleUpdate = () => {
+    setMessageContent('Update successful!');
+    setShowMessage(true);
+    setTokenChanged(false);
+  };
+
+  const handleDelete = () => {
+    setMessageContent('User deleted');
+    setShowMessage(true);
+    setTokenChanged(false);
+  };
+
+  const handleLogout = () => {
+    setTokenChanged(false)
+  };
+
   return (
-    <div className="container mt-4">
-      <style>
-        
-      </style>
-      {token ? (
-        <div>
-          <User userId={Number(userId)} />
-          <Poem />
-        </div>
-      ) : (
-        <div>
-          {showMessage && (
-            <div className="alert alert-success" role="alert">
-              {messageContent}
-            </div>
-          )}
-          <Poem />
+    <div>
+      <header className="header">
+        {token ? (
+          <NavbarIn
+            onUpdate={handleUpdate}
+            onDelete={handleDelete}
+            onLogout={handleLogout}
+            token={token}
+            userId={Number(userId)}
+            userData={{}}
+          />
+        ) : (
           <NavbarOut
             onLogin={handleLogin}
             onRegister={handleRegister}
           />
-        </div>
-      )}
+        )}
+      </header>
+      <div className="container mt-6">
+        {token ? (
+          <div>
+            <User userId={Number(userId)} />
+            <Poem />
+          </div>
+        ) : (
+          <div>
+            {showMessage && (
+              <div className="alert alert-success" role="alert">
+                {messageContent}
+              </div>
+            )}
+            <Poem />
+          </div>
+        )}
+      </div>
     </div>
   );
 }

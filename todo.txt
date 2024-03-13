@@ -1,1 +1,3 @@
-* update doesn't behave properly
+* add confirmatino messages to all actions
+* add error handling and commnets to functions
+* figure out the mapping function for poemlist

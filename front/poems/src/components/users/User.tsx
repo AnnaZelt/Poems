@@ -25,26 +25,6 @@ const User: React.FC<UserProps> = ({ userId }) => {
     }
   }, [tokenReceived]);
 
-  const handleShowNavbar = () => {
-    setShowNavbar(true);
-  };
-
-  const handleUpdate = () => {
-    setMessageContent('Update successful!');
-    setShowMessage(true);
-    setTokenChanged(false); // Set tokenChanged to trigger reload
-  };
-
-  const handleDelete = () => {
-    setMessageContent('User deleted');
-    setShowMessage(true);
-    setTokenChanged(false); // Set tokenChanged to trigger reload
-  };
-
-  const handleLogout = () => {
-    setTokenChanged(false); // Set tokenChanged to trigger reload
-  };
-
   const handleShowPoems = () => {
     setShowPoems(true);
   };
@@ -58,29 +38,14 @@ const User: React.FC<UserProps> = ({ userId }) => {
     
   }
 
-  const toggleNavbarVisibility = () => {
-    setShowNavbar((prevShowNav) => !prevShowNav); // Toggle the state between true and false
-  };
-
   return (
-    <div>
+    <div className='user'>
       <h3>Welcome, {token?.username}</h3>
       <PoemList 
       onFetchPoems={handleShowPoems} 
       onFetchPoemDetail={handleFetchPoemDetail} 
       onDeletePoem={handleDeletePoem} 
       />
-      <button onClick={showNavbar ? toggleNavbarVisibility : handleShowNavbar}>
-      {showNavbar ? 'Close Navbar' : 'Show Navbar'}
-      </button>
-      {showNavbar && token! && (
-        <NavbarIn
-          onUpdate={handleUpdate}
-          onDelete={handleDelete} // Pass onDelete callback
-          token={token}
-          userId={Number(userId)}
-          userData={{}}
-        />)}
     </div>
   );
 };

@@ -1,161 +1,366 @@
 @import "~bootstrap/dist/css/bootstrap.min.css";
 
-
 // Define custom colors
-$ivory-white: #fffff0;
-$button-color: #f0f0f0;
-$border-color: #ddd;
+$ivory-white: rgba(255, 255, 240, 0.8); // Adjust the alpha value (0.0 to 1.0) for the desired transparency
+$black-brown: rgba(40, 20, 20, 0.8); // Adjust the RGB values and alpha for the desired color and transparency
+$border-color: #ccc;
+$text-color: #333;
+$font-family: Arial, sans-serif;
 
-body{
+body {
   background-image: url('../assets/images/pngtree-an-old-library-or-book-room-with-some-books-and-plants-picture-image_2496727.png');
+  margin: 0;
+  padding: 0;
 }
 
-// Custom styles for the container
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 999;
+}
+
+nav ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+nav ul li {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+nav ul li a {
+  text-decoration: none;
+  color: $text-color;
+}
+
+nav ul li a:hover {
+  text-decoration: underline;
+}
+
 .container {
   width: 80%;
-  margin: 5% auto;
-  background-color: $ivory-white;
+  margin: 100px auto 0; /* Adjust top margin to position below header */
+  background-color: $black-brown;
   padding: 20px;
   border-radius: 10px;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); // Fuzzy border effect
-  height: 90vh; // 90% of the viewport height
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  min-height: calc(100vh - 160px); /* Make container height 100% - header height */
+  overflow-y: auto; /* Add scroll if content exceeds container height */
 }
 
-// Custom styles for input boxes
-input[type="text"],
-input[type="password"],
-input[type="email"],
 select {
   border: 1px solid $border-color;
-  border-radius: 5px;
-  padding: 5px 10px;
+  border-radius: 10px;
+  padding: 10px;
+  width: calc(100% - 22px); /* Adjust for border and padding */
+  margin-bottom: 10px;
+  background-color: $ivory-white;
+  color: $text-color;
+  height: 120px; /* Increase input box height */
 }
 
-$button-color: #f5f5dc; // Slightly darker ivory color
+input[type="text"],
+input[type="password"],
+input[type="email"] {
+  border: 1px solid $border-color;
+  border-radius: 10px;
+  padding: 10px;
+  width: calc(20% - 22px); /* Adjust for border and padding */
+  margin-left: 5px;
+  margin-bottom: 10px;
+  background-color: $ivory-white;
+  color: $text-color;
+  height: 10%; /* Increase input box height */
+  margin-right: 10px; /* Add margin between buttons */
+}
+
+select.poet-style {
+  width: 190px; /* Set width to auto to fit content */
+  height: 50px;
+  background-color: transparent; /* Set background color to transparent */
+  color: $ivory-white; /* Set text color to ivory-white */
+}
+
+select.poet-style option {
+  background-color: $black-brown; /* Set background color for options */
+  color: $ivory-white; /* Set text color for options */
+}
+
+textarea.poem-input {
+  border: 1px solid $border-color;
+  border-radius: 10px;
+  padding: 10px;
+  width: calc(100% - 22px); /* Adjust for border and padding */
+  margin-bottom: 10px;
+  background-color: $ivory-white;
+  color: $text-color;
+  height: 190px; /* Increase input box height */
+}
 
 button {
-  background-color: $button-color;
-  border: 1px solid $border-color;
+  background-color: transparent;
+  border: none;
   border-radius: 5px;
-  padding: 5px 10px;
+  padding: 10px;
   margin-left: 5px;
-  transition: opacity 0.8s ease-in-out; /* Add transition for opacity change */
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+  font-family: $font-family;
+  cursor: pointer;
+  color: $ivory-white;
+  transition: background-color 0.3s ease;
 }
 
 button:hover {
-  background-color: darken($button-color, 5%);
+  background-color: $ivory-white;
+  color: black;
 }
 
 button:active {
-  background-color: lighten($button-color, 5%);
+  background-color: $ivory-white;
+  color: $ivory-white;
 }
 
-button[aria-expanded='true'] {
-  animation: fadeOut 0.3s ease-in-out;
+ul {
+  list-style-type: none;
+  padding: 0;
 }
 
-@keyframes fadeOut {
-  from {
-    opacity: 1;
-  }
-  to {
-    opacity: 0;
-  }
-}
-
-// Update the styles for the expand and delete buttons to make them smaller
-li button {
-  margin-left: 10px;  /* Adjust as needed */
-  padding: 5px 6px;   /* Set smaller padding */
-  font-size: 14px;    /* Set smaller font size */
-}
-
-// Add margin to create vertical alignment between the buttons and the text
 li {
-  margin-bottom: 15px;  /* Add margin below each list item */
+  margin-bottom: 10px;
 }
 
-select {
-  background-color: $button-color; // Use the button color variable for the background
-  border: 1px solid $border-color;
-  border-radius: 5px;
-  padding: 5px 10px;
-  margin-left: 5px;
-  color: #333; // Set text color to dark gray
-}
-
-.poem-popup {
-  position: fixed;
-  z-index: 1;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-  background-color: rgba(0, 0, 0, 0.4);
-}
-
-.poem-popup-content {
-  background-color: ivory; // Set the background image
-  background-size: contain; // Resize the image to fit within the container
-  background-repeat: no-repeat; // Prevent the image from repeating
-  background-position: center; // Center the image
-  margin: 15% auto;
-  padding: 20px;
-  border: 1px solid #888;
-  width: 75%; // Make the popup 25% less wide
-  max-height: 90%; // Set maximum height to 90% of the viewport height
-  overflow-y: auto; // Enable vertical scrolling if the content exceeds the maximum height
-  border-radius: 5px;
-  position: relative;
-  font-family: 'Times New Roman', Times, serif; // Use a literature-style font
-  font-size: 16px; // Set font size
-  line-height: 1.5; // Set line height
-  text-align: justify; // Justify the text
-
-}
-
-.close {
-  position: absolute;
-  top: 110px;  /* Adjust as needed */
-  right: 10px;  /* Adjust as needed */
-  color: #aaa;
-  font-size: 28px;
-  font-weight: bold;
-}
-
-.close:hover,
-.close:focus {
-  color: black;
+a {
   text-decoration: none;
-  cursor: pointer;
+  color: $text-color;
 }
 
+a:hover {
+  text-decoration: underline;
+}
+
+.user h3 {
+  color: $ivory-white;
+}
+
+.p-tag {
+  color: $ivory-white;
+  font-size: 20px;
+  line-height: 1.5;
+}
 
 .navbar-in {
-  position: absolute;
-  bottom: 80px; /* Adjust as needed */
-  right: 190px; /* Adjust as needed */
-  background-color: $ivory-white;
+  bottom: 20px;
+  right: 20px;
+  background-color: $black-brown;
   padding: 10px;
   border-radius: 5px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  z-index: 999; // Ensure the navbar is above other content
+  z-index: 999;
 }
 
 .navbar-in button {
-  margin-top: 15px;
+  margin-top: 10px;
 }
 
 .navbar-in button:last-child {
   margin-bottom: 0;
+}
+
+.navbar-out {
+  bottom: 20px;
+  right: 20px;
+  background-color: $black-brown;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 999;
+}
+
+.navbar-out button {
+  margin-top: 10px;
+}
+
+.navbar-out button:last-child {
+  margin-bottom: 0;
+}
+
+.popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  z-index: 999;
+}
+
+.popup-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+}
+
+.popup-content {
+  margin-top: 20px;
+}
+
+.login-popup,
+.register-popup,
+.update-form {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: $ivory-white;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+.update-form input[type="text"],
+.update-form input[type="email"] {
+  margin-bottom: 10px;
+}
+
+.spinner {
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top: 4px solid $ivory-white;
+  width: 30px;
+  height: 30px;
+  animation: spin 1s linear infinite;
+  margin: 0 auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.poem-list-container {
+  margin-top: 30px; /* Adjust top margin */
+}
+
+.toggle-poems-btn {
+  background-color: transparent;
+  border: none;
+  border-radius: 5px;
+  margin-bottom: 5px;
+  padding: 10px;
+  font-family: $font-family;
+  cursor: pointer;
+  color: $ivory-white;
+  transition: background-color 0.3s ease;
+}
+
+.toggle-poems-btn:hover {
+  background-color: $ivory-white;
+  color: black;
+}
+
+.toggle-poems-btn:active {
+  background-color: $ivory-white;
+  color: $ivory-white;
+}
+
+.poem-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.poem-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid $border-color;
+  color: $ivory-white;
+}
+
+.poem-item button {
+  background-color: transparent;
+  border: none;
+  border-radius: 5px;
+  padding: 5px;
+  font-family: $font-family;
+  cursor: pointer;
+  color: $ivory-white;
+  transition: background-color 0.3s ease;
+}
+
+.poem-item button:hover {
+  background-color: $ivory-white;
+  color: black;
+}
+
+.poem-item button:active {
+  background-color: $ivory-white;
+  color: $ivory-white;
+}
+
+.poem-item .buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px; /* Add space between buttons */
+}
+
+.poem-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: $ivory-white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  z-index: 999;
+}
+
+.poem-popup-content {
+  margin-top: 20px;
+}
+
+.poem-popup .close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+  background-color: transparent;
+  border: none;
+  border-radius: 50px;
+  padding: 5px;
+  font-family: $font-family;
+  color: $ivory-white;
+  transition: background-color 0.3s ease;
+  color: black;
+}
+
+.poem-popup .close:hover {
+  background-color: $ivory-white;
+  color: black;
+}
+
+.poem-popup .close:active {
+  background-color: $ivory-white;
+  color: $ivory-white;
+}
+
+
+.poem-popup button:hover {
+  background-color: $ivory-white;
+  color: black;
+}
+
+.poem-popup button:active {
+  background-color: $ivory-white;
+  color: $ivory-white;
 }

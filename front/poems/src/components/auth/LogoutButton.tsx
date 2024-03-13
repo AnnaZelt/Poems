@@ -15,7 +15,6 @@ const LogoutButton: React.FC<LogoutButtonProps> = ({ onLogout }) => {
     dispatch(logout());
     localStorage.removeItem('token');
     localStorage.removeItem('tokenExpirationTime')
-    // window.location.reload();
     };
 
   return (
