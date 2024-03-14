@@ -7,15 +7,14 @@ interface LogoutButtonProps {
   onLogout: () => void;
 }
 
-const LogoutButton: React.FC<LogoutButtonProps> = ({ onLogout }) => {
+const LogoutButton: React.FC<LogoutButtonProps> = ({ }) => {
   const dispatch = useDispatch<AppDispatch>();
-  const [loading, setLoading] = useState(false);
 
   const handleLogout = async () => {
     dispatch(logout());
     localStorage.removeItem('token');
-    localStorage.removeItem('tokenExpirationTime')
-    };
+    localStorage.removeItem('tokenExpirationTime');
+  }
 
   return (
     <button onClick={handleLogout}>

@@ -3,7 +3,7 @@ import LoginForm from '../auth/LoginForm';
 import RegisterForm from '../form/RegisterForm';
 
 interface NavbarOutProps {
-  onLogin: () => void;
+  onLogin: (isSuccessful: boolean) => void;
   onRegister: () => void;
 }
 
@@ -13,12 +13,12 @@ const NavbarOut: React.FC<NavbarOutProps> = ({ onLogin, onRegister }) => {
 
   const toggleLoginForm = () => {
     setShowLoginForm((prev) => !prev);
-    setShowRegisterForm(false); // Close the register form
+    setShowRegisterForm(false);
   };
 
   const toggleRegisterForm = () => {
     setShowRegisterForm((prev) => !prev);
-    setShowLoginForm(false); // Close the login form
+    setShowLoginForm(false);
   };
 
   return (

@@ -14,7 +14,7 @@ interface UpdateFormProps {
   onUpdate: () => void;
 }
 
-const UpdateForm: React.FC<UpdateFormProps> = ({ token, userId, userData, onUpdate }) => {
+const UpdateForm: React.FC<UpdateFormProps> = ({ token, userId, userData}) => {
   const dispatch = useDispatch<AppDispatch>();
   const [username, setUsername] = useState(userData.username || '');
   const [email, setEmail] = useState(userData.email || '');
@@ -28,10 +28,12 @@ const UpdateForm: React.FC<UpdateFormProps> = ({ token, userId, userData, onUpda
     }
   };
 
-  const handleUpdateUser = () => {
+  const handleUpdateUser = async () => {
     dispatch(updateUser({ token, userId, userData: { username, email } }))
       .then(() => {
         dispatch(logout());
+        localStorage.removeItem('token');
+        localStorage.removeItem('tokenExpirationTime')
       })
       .catch((error) => {
         console.error('Failed to update user:', error);

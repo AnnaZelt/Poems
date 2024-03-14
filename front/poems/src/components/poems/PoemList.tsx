@@ -1,12 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '../../redux/store';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '../../redux/store';
 import { deletePoem, fetchPoems } from '../../features/poems/poemSlice';
-import { Token } from '../../types/token';
+import { Poemtype } from '../../types/poem';
 import { v4 as uuidv4 } from 'uuid';
-
-const tokenString = localStorage.getItem('token');
-const token: Token = JSON.parse(tokenString!);
 
 interface PoemListProps {
   onFetchPoemDetail: (userId: number) => void;
@@ -14,25 +11,47 @@ interface PoemListProps {
   onFetchPoems: () => void;
 }
 
-// Define the poems outside of the component
-const poemsSelector = (state: RootState) => state.poems.poems;
-
 const PoemList: React.FC<PoemListProps> = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const poems = useSelector(poemsSelector);
+  const [showMessage, setShowMessage] = useState(false);
+  const [messageContent, setMessageContent] = useState('');
+  const [fetchedPoems, setFetchedPoems] = useState<Poemtype[]>([]);
   const [selectedPoem, setSelectedPoem] = useState<string | null>(null);
-  const [showPoems, setShowPoems] = useState(false); // State to track if poems are shown or not
+  const [showPoems, setShowPoems] = useState(false);
 
-  const handleFetchPoems = () => {
-    dispatch(fetchPoems());
-    setShowPoems(true); // Show poems when fetched
-  };
+  useEffect(() => {
+    if (!fetchedPoems.length) {
+      dispatch(fetchPoems()).then((action) => {
+        if (fetchPoems.fulfilled.match(action)) {
+          setFetchedPoems(action.payload);
+        } else if (fetchPoems.rejected.match(action)) {
+          setMessageContent('Token expired');
+          setShowMessage(true);
+          setTimeout(() => {
+            setShowMessage(false);
+          }, 3000);
+        }
+      });
+    }
+  }, [dispatch, fetchedPoems.length]);
 
-  const handleDeletePoem = (id: number) => {
-    if (!token) {
-      console.log('token expired');
-    } else {
-      dispatch(deletePoem(id));
+  const handleDeletePoem = async (id: number) => {
+    try {
+      await dispatch(deletePoem(id));
+      setMessageContent('Poem deleted');
+      setShowMessage(true);
+      setTimeout(() => {
+        setShowMessage(false);
+      }, 3000);
+
+      setFetchedPoems((prevPoems) => prevPoems.filter((poem) => poem.id !== id));
+    } catch (error) {
+      console.error('Failed to delete poem:', error);
+      setMessageContent('Failed to delete poem');
+      setShowMessage(true);
+      setTimeout(() => {
+        setShowMessage(false);
+      }, 3000);
     }
   };
 
@@ -41,32 +60,36 @@ const PoemList: React.FC<PoemListProps> = () => {
   };
 
   const togglePoemsVisibility = () => {
-    setShowPoems((prevShowPoems) => !prevShowPoems); // Toggle the state between true and false
+    setShowPoems((prevShowPoems) => !prevShowPoems);
   };
 
   return (
     <div className="poem-list-container">
-      <button className="toggle-poems-btn" onClick={showPoems ? togglePoemsVisibility : handleFetchPoems}>
+      {showMessage && (
+        <div className="alert alert-success" role="alert">
+          {messageContent}
+        </div>
+      )}
+      <button className="toggle-poems-btn" onClick={togglePoemsVisibility}>
         {showPoems ? 'Close Poems' : 'Show My Poems'}
       </button>
       {showPoems && (
-  <ul>
-    {poems.map((poem) => (
-      poem.is_active ? (
-        <li key={uuidv4()} className="poem-item">
-          <div>
-            {poem.poem_text.length > 50 ? `${poem.poem_text.slice(0, 50)}...` : poem.poem_text}
-          </div>
-          <div className="buttons">
-            <button onClick={() => handlePoemClick(poem.poem_text)}>Expand</button>
-            <button onClick={() => handleDeletePoem(poem.id)}>Delete</button>
-          </div>
-        </li>
-      ) : null
-    ))}
-  </ul>
-)}
-
+        <ul>
+          {fetchedPoems.map((poem) => (
+            poem.is_active ? (
+              <li key={poem.id} className="poem-item">
+                <div>
+                  {poem.poem_text.length > 50 ? `${poem.poem_text.slice(0, 50)}...` : poem.poem_text}
+                </div>
+                <div className="buttons">
+                  <button onClick={() => handlePoemClick(poem.poem_text)}>Expand</button>
+                  <button onClick={() => handleDeletePoem(poem.id)}>Delete</button>
+                </div>
+              </li>
+            ) : null
+          ))}
+        </ul>
+      )}
 
       {selectedPoem && (
         <div className="poem-popup">

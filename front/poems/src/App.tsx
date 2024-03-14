@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { AppDispatch } from './redux/store';
 import NavbarOut from './components/users/NavbarOut';
 import Poem from './components/poems/Poem';
 import User from './components/users/User';
-import { AuthState, setError, setIsLoggedIn } from './features/auth/authSlice';
+import { logout, setError, setIsLoggedIn } from './features/auth/authSlice';
 import './styles/styles.scss';
 import NavbarIn from './components/users/NavbarIn';
 
@@ -17,9 +17,7 @@ function App() {
   const token = tokenString ? JSON.parse(tokenString) : null;
   const userIdString: string | null = token?.id || null;
   const userId: number | null = userIdString ? parseInt(userIdString, 10) : null;
-  const isLoggedIn = useSelector((state: { auth: AuthState }) => state.auth.isLoggedIn);
   const [tokenNotNull, setTokenChanged] = useState(false); // State to track token changes
-
 
   useEffect(() => {
     if (token) {
@@ -31,28 +29,33 @@ function App() {
         setTokenExpirationTime(timeLeft);
 
         const interval = setInterval(() => {
-          setTokenExpirationTime((prevTime) => {
-            if (prevTime && prevTime > 0) {
-              return prevTime - 1000;
-            } else {
-              clearInterval(interval);
-              return null;
-            }
-          });
+          const current = Date.now();
+          const remaining = expiration - current;
+          setTokenExpirationTime(remaining > 0 ? remaining : 0);
         }, 1000);
+
+        return () => clearInterval(interval); // Clear interval on component unmount
       } else {
-        // Token has expired, logout the user
         dispatch(setError('Token has expired'));
         dispatch(setIsLoggedIn(false));
+        dispatch(logout());
+        localStorage.removeItem('token');
+        localStorage.removeItem('tokenExpirationTime')
       }
     }
   }, [token, dispatch]);
 
-  const handleLogin = () => {
-    // Handle login logic here
-    // For example, set isLoggedIn to true after successful login
-    dispatch(setIsLoggedIn(true));    
-    // setTokenChanged(true);
+  const handleLogin = (isSuccessful: boolean) => {
+    if (isSuccessful) {
+      dispatch(setIsLoggedIn(true));
+      setTokenChanged(true);
+    } else {
+      setMessageContent('Incorrect username or password');
+      setShowMessage(true);
+      setTimeout(() => {
+        setShowMessage(false);
+      }, 3000);
+    }
   };
 
   const handleRegister = () => {
@@ -60,18 +63,24 @@ function App() {
     setShowMessage(true);
     setTimeout(() => {
       setShowMessage(false);
-    }, 2000); // Hide the message after 5 seconds
+    }, 3000);
   };
 
   const handleUpdate = () => {
-    setMessageContent('Update successful!');
+    setMessageContent('Updated details');
     setShowMessage(true);
+    setTimeout(() => {
+      setShowMessage(false);
+    }, 3000);
     setTokenChanged(false);
   };
 
   const handleDelete = () => {
     setMessageContent('User deleted');
     setShowMessage(true);
+    setTimeout(() => {
+      setShowMessage(false);
+    }, 3000);
     setTokenChanged(false);
   };
 
@@ -106,12 +115,12 @@ function App() {
           </div>
         ) : (
           <div>
-            {showMessage && (
-              <div className="alert alert-success" role="alert">
-                {messageContent}
-              </div>
-            )}
             <Poem />
+          </div>
+        )}
+        {showMessage && (
+          <div className="alert alert-success" role="alert">
+            {messageContent}
           </div>
         )}
       </div>

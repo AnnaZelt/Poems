@@ -5,9 +5,6 @@ import DeleteButton from './DeleteButton';
 import { Token } from '../../types/token';
 import { User } from '../../types/user';
 import UpdateForm from '../form/UpdateForm';
-import { useDispatch } from 'react-redux';
-import { AppDispatch } from '../../redux/store';
-import { logout } from '../../features/auth/authSlice';
 
 interface NavbarInProps {
   onUpdate: () => void;

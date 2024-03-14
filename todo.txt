@@ -1,3 +1,4 @@
-* add confirmatino messages to all actions
-* add error handling and commnets to functions
-* figure out the mapping function for poemlist
+* add email functionality
+* add logo
+* add logging
+* move the project to free online servers, and chnge to postgresql

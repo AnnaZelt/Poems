@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {  useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
-import NavbarIn from './NavbarIn';
 import PoemList from '../poems/PoemList';
 import { Token } from '../../types/token';
 
@@ -10,13 +9,9 @@ interface UserProps {
 }
 
 const User: React.FC<UserProps> = ({ userId }) => {
-  const [showMessage, setShowMessage] = useState(false);
-  const [messageContent, setMessageContent] = useState('');
-  const [tokenNotNull, setTokenChanged] = useState(false); // State to track token changes
   const [loading, setLoading] = useState(true);
   const [tokenReceived, setTokenReceived] = useState(false);
-  const [showNavbar, setShowNavbar] = useState(false); // State to control navbar visibility
-  const [showPoems, setShowPoems] = useState(true); // State to control navbar visibility
+  const [showPoems, setShowPoems] = useState(true);
   const token: Token | null = useSelector((state: RootState) => state.auth.token);
 
   useEffect(() => {
@@ -34,8 +29,7 @@ const User: React.FC<UserProps> = ({ userId }) => {
   }
 
   function handleDeletePoem(): void {
-    console.log('deleted');
-    
+    return;
   }
 
   return (

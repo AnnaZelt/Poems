@@ -14,10 +14,12 @@ const DeleteButton: React.FC<DeleteUserProps> = ({ token, userId, onDelete }) =>
   const dispatch = useDispatch<AppDispatch>();
 
   const handleDeleteUser = () => {
+    if (window.confirm('Are you sure you want to delete your account?')) {
     dispatch(deleteUser({ token, userId })).then(() => {
       onDelete();
     });
   };
+}
 
   return <button onClick={handleDeleteUser}>Delete User</button>;
 };

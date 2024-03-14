@@ -15,7 +15,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onRegister }) => {
 
   const handleRegister = () => {
     dispatch(register({ username, password, email })).then(() => {
-      onRegister(); // Call onLogin after successful login
+      onRegister();
     });
   };
 
