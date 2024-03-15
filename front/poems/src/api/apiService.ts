@@ -1,8 +1,7 @@
 import User from "../features/users/userSlice";
 import { Token } from "../types/token";
 
-// front/poems/src/app/apiService.ts
-export const API_BASE_URL = 'http://127.0.0.1:8000/api/';
+export const API_BASE_URL = 'https://poems-fsdx.onrender.com/api/';
 
 export const apiService = {
   async register(username: string, password: string, email: string, token: Token | null) {
