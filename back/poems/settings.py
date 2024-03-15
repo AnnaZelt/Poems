@@ -3,6 +3,8 @@ import os
 import dj_database_url
 from decouple import config
 from pathlib import Path
+from corsheaders.defaults import default_headers
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -200,11 +202,6 @@ CORS_ALLOW_ORIGINS = ['https://aipoems.netlify.app/']
 #     "PUT",
 # )
 
-# CORS_ALLOW_HEADERS = (
-#     "accept",
-#     "authorization",
-#     "content-type",
-#     "user-agent",
-#     "x-csrftoken",
-#     "x-requested-with",
-# )
+CORS_ALLOW_HEADERS = [
+    *default_headers,
+]
