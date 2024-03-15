@@ -1,0 +1,21 @@
+databases:
+  - name: poemsdb
+    plan: free
+    databaseName: poems
+    user: anna  
+
+services:
+  - type: web
+    plan: free
+    name: poems
+    runtime: python
+    buildCommand: "./build.sh"
+    startCommand: "python -m gunicorn poems.asgi:application -k uvicorn.workers.UvicornWorker"    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: poemsdb
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: WEB_CONCURRENCY
+        value: 4

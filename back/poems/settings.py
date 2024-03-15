@@ -1,5 +1,7 @@
 from datetime import timedelta
-from utils import mysqlPass, SECRET_KEY as sc
+import os
+import dj_database_url
+from decouple import config
 
 from pathlib import Path
 
@@ -10,11 +12,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = sc
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+SECRET_KEY=config('SECRET_KEY', type=str)
+DEBUG=config('DEBUG', type=bool)
 
 ALLOWED_HOSTS = ['*']
 
@@ -70,9 +69,30 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
 }
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'INFO',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': 'base/logging.log',
+            'maxBytes': 1024 * 1024,  # 1 MB
+            'backupCount': 5,  # Keep 5 backup files
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+    },
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -106,16 +126,23 @@ WSGI_APPLICATION = 'poems.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'poems',
+#         'USER': 'root',
+#         'PASSWORD': mysqlPass,
+#         'HOST': '127.0.0.1',
+#         'PORT': '3306',
+#     }
+# }
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'poems',
-        'USER': 'root',
-        'PASSWORD': mysqlPass,
-        'HOST': '127.0.0.1',
-        'PORT': '3306',
+    'default': dj_database_url.config(
+        default='postgresql://postgres:postgres@localhost:8000/',
+        conn_max_age=600
+        )
     }
-}
 
 
 # Password validation
@@ -148,11 +175,13 @@ USE_I18N = True
 
 USE_TZ = True
 
-
+if not DEBUG:
+    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
