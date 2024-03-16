@@ -1,9 +1,20 @@
 import User from "../features/users/userSlice";
 import { Token } from "../types/token";
 
-export const API_BASE_URL = process.env.REACT_APP_API_BASE_URL?.endsWith('/')
+import dotenv from 'dotenv';
+import path from 'path';
+
+// Specify the path to your .env file
+const envPath = path.resolve(__dirname, '..', '..', '..', '.env');
+
+// Load environment variables from the specified file
+dotenv.config({ path: envPath });
+
+// Now you can access your environment variables as usual
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL?.endsWith('/')
   ? `${process.env.REACT_APP_API_BASE_URL}api/`
   : `${process.env.REACT_APP_API_BASE_URL}/api/`;
+
 
   export const apiService = {
   async register(username: string, password: string, email: string, token: Token | null) {
@@ -11,7 +22,9 @@ export const API_BASE_URL = process.env.REACT_APP_API_BASE_URL?.endsWith('/')
       const headers: Record<string, string> = {
         'Content-Type': 'application/json',
       };
-  
+      console.log(envPath,'----------------------------');
+      console.log(API_BASE_URL,'----------------------------');
+      
       if (token) {
         headers['Authorization'] = `Bearer ${token.access}`;
       }
