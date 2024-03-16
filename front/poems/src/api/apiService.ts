@@ -1,6 +1,6 @@
 import User from "../features/users/userSlice";
 import { Token } from "../types/token";
-import { REACT_APP_API_BASE_URL } from './utils'
+import { REACT_APP_API_BASE_URL } from '../../build/utils'
 
 const API_BASE_URL = REACT_APP_API_BASE_URL
 
