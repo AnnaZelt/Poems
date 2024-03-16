@@ -3,7 +3,8 @@ import os
 import dj_database_url
 from decouple import config
 from pathlib import Path
-from corsheaders.defaults import default_headers
+from corsheaders.defaults import default_headers, default_methods
+
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -192,15 +193,11 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CORS_ALLOW_ORIGINS = ['https://aipoems.netlify.app/']
+CORS_ALLOW_ORIGINS = ['https://aipoems.netlify.app']
 
-# CORS_ALLOW_METHODS = (
-#     "DELETE",
-#     "GET",
-#     "OPTIONS",
-#     "POST",
-#     "PUT",
-# )
+CORS_ALLOW_METHODS = (
+    *default_methods,
+)
 
 CORS_ALLOW_HEADERS = [
     *default_headers,

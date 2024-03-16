@@ -8,7 +8,6 @@ export const apiService = {
     try {
       const headers: Record<string, string> = {
         'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': 'https://aipoems.netlify.app',
       };
   
       if (token) {
@@ -38,7 +37,6 @@ export const apiService = {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': 'https://aipoems.netlify.app',
       },
       body: JSON.stringify({ username, password }),
     });
@@ -58,7 +56,6 @@ export const apiService = {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': 'https://aipoems.netlify.app',
       },
       body: JSON.stringify({ refresh: refreshToken.refresh }),
     });
@@ -92,7 +89,6 @@ export const apiService = {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token.access}`,
-        'Access-Control-Allow-Origin': 'https://aipoems.netlify.app',
       },
     });
     return await response.json();
@@ -115,7 +111,6 @@ export const apiService = {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token.access}`,
-        'Access-Control-Allow-Origin': 'https://aipoems.netlify.app',
       },
     });
     return await response.json();
@@ -125,7 +120,6 @@ export const apiService = {
     try {
       const headers: Record<string, string> = {
         'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': 'https://aipoems.netlify.app',
       };
       
       if (token) {
@@ -165,7 +159,6 @@ export const apiService = {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token.access}`,
-        'Access-Control-Allow-Origin': 'https://aipoems.netlify.app',
       },
     });
     return await response.json();
@@ -177,7 +170,6 @@ export const apiService = {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token.access}`,
-        'Access-Control-Allow-Origin': 'https://aipoems.netlify.app',
       },
       body: JSON.stringify(userData),
     });
@@ -190,7 +182,6 @@ export const apiService = {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token.access}`,
-        'Access-Control-Allow-Origin': 'https://aipoems.netlify.app',
       },
     });
     return await response.json();
