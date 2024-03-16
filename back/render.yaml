@@ -26,3 +26,4 @@ services:
         generateValue: true
       - key: DJANGO_SETTINGS_MODULE
         value: config.settings.production
+      - fromGroup: Poems_env
