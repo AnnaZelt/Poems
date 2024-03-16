@@ -2,7 +2,7 @@ import User from "../features/users/userSlice";
 import { Token } from "../types/token";
 // import { REACT_APP_API_BASE_URL } from './utils'
 
-const API_BASE_URL = "https://poems-fsdx.onrender.com/api"
+const API_BASE_URL = "https://poems-fsdx.onrender.com/api/"
 
   export const apiService = {
   async register(username: string, password: string, email: string, token: Token | null) {
