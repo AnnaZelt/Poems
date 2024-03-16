@@ -18,6 +18,20 @@ logger = logging.getLogger('base.view')
 class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
 
+@api_view(['GET'])
+def index(request):
+    return Response('hello')
+
+import psutil
+def bytes_to_gb(bytes):
+    gb = bytes / (1024 ** 3)
+    return gb
+
+process = psutil.Process()
+memory_info = process.memory_info()
+print(f"Memory Usage: {bytes_to_gb(memory_info.rss)} GB")
+
+
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def register(request):
@@ -36,18 +50,6 @@ def register(request):
             return Response(user_serializer.data, status=201)
         logger.error('User registration failed')
         return Response(user_serializer.errors, status=400)
-
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def generated_poem_list(request):
-    logger.debug('Generated poem list view called')
-    if request.user.is_superuser:
-        poems = GeneratedPoem.objects.all()
-    else:
-        poems = GeneratedPoem.objects.filter(user=request.user)
-
-    serializer = GeneratedPoemSerializer(poems, many=True)
-    return Response(serializer.data)
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
@@ -76,12 +78,25 @@ def create_poem(request):
 
     return Response(input_serializer.errors, status=400)
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def generated_poem_list(request):
+    logger.debug('Generated poem list view called')
+    if request.user.is_superuser:
+        poems = GeneratedPoem.objects.all().select_related('user')
+    else:
+        poems = GeneratedPoem.objects.filter(user=request.user).select_related('user')
+
+    serializer = GeneratedPoemSerializer(poems, many=True)
+    return Response(serializer.data)
+
+
 @api_view(['GET', 'PUT', 'DELETE'])
 @permission_classes([IsAuthenticated])
 def generated_poem_detail(request, pk):
     logger.debug('Generated poem detail view called')
     try:
-        poem = GeneratedPoem.objects.get(pk=pk)
+        poem = GeneratedPoem.objects.select_related('user').get(pk=pk)
     except GeneratedPoem.DoesNotExist:
         return Response(status=404)
 

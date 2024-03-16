@@ -2,7 +2,7 @@ databases:
   - name: poemsdb
     plan: free
     databaseName: poems
-    user: anna  
+    user: anna
 
 services:
   - type: web
@@ -10,12 +10,24 @@ services:
     name: poems
     runtime: python
     buildCommand: "./build.sh"
-    startCommand: "python -m gunicorn poems.asgi:application -k uvicorn.workers.UvicornWorker"    
+    startCommand: "python -m gunicorn poems.asgi:application -k uvicorn.workers.UvicornWorker"
+    headers:
+      - path: /*
+        name: Access-Control-Allow-Origin
+        value: "https://aipoems.netlify.app"
+      - path: /*
+        name: Access-Control-Allow-Methods
+        value: "GET, POST, PUT, DELETE, OPTIONS"
+      - path: /*
+        name: Access-Control-Allow-Headers
+        value: "Origin, X-Requested-With, Content-Type, Accept"
     envVars:
       - key: DATABASE_URL
         fromDatabase:
           name: poemsdb
           property: connectionString
+      - key: API_KEY
+        generateValue: true
       - key: SECRET_KEY
         generateValue: true
       - key: WEB_CONCURRENCY
@@ -26,4 +38,3 @@ services:
         generateValue: true
       - key: DJANGO_SETTINGS_MODULE
         value: config.settings.production
-      - fromGroup: Poems_env
