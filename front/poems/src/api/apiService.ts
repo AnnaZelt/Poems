@@ -5,7 +5,7 @@ import dotenv from 'dotenv';
 import path from 'path';
 
 // Specify the path to your .env file
-const envPath = path.resolve(__dirname, '..', '..', '..', '.env');
+const envPath = path.resolve(__dirname, '.env');
 
 // Load environment variables from the specified file
 dotenv.config({ path: envPath });
