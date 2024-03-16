@@ -15,12 +15,14 @@ services:
       - key: DATABASE_URL
         fromDatabase:
           name: poemsdb
-          property: "postgres://anna:2JDJwY3ZeybnVQpzWSD1O27BkGRvtW0Q@dpg-cnq6a50l6cac73ar3i6g-a/poems_85n6"
+          property: connectionString
       - key: SECRET_KEY
         generateValue: true
       - key: WEB_CONCURRENCY
         value: 4
-      - key: CORS_ALLOWED_ORIGINS
-        value: "https://aipoems.netlify.app"
-      - key: CORS_ALLOW_HEADERS
-        value: "*"
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: DJANGO_ADMIN_URL
+        generateValue: true
+      - key: DJANGO_SETTINGS_MODULE
+        value: config.settings.production
