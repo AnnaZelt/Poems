@@ -1,7 +1,7 @@
 import User from "../features/users/userSlice";
 import { Token } from "../types/token";
 
-export const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || '';
+export const API_BASE_URL = process.env.REACT_APP_API_BASE_URL+'api/' || '';
 
 export const apiService = {
   async register(username: string, password: string, email: string, token: Token | null) {
