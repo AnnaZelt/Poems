@@ -110,7 +110,6 @@ const authSlice = createSlice({
       state.isLoggedIn = false;
     });
     builder.addCase(logout.rejected, (state, action) => {
-      console.log('Logout rejected:', action.payload); // Log the rejection payload
       state.token = null;
       state.userId = null;
       state.error = action.payload as string;

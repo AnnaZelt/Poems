@@ -1,4 +1,3 @@
-// features/poems/poemSlice.ts
 
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { RootState } from '../../redux/store';
@@ -8,7 +7,7 @@ import { Token } from '../../types/token';
 
 interface PoemState {
   poems: Poemtype[];
-  selectedPoem: Poemtype | null; // Add a new field for storing the selected poem details
+  selectedPoem: Poemtype | null;
   token: Token | null;
   refreshToken: string | null;
   userId: number | null;
@@ -26,21 +25,21 @@ const initialState: PoemState = {
 
 export const fetchPoems = createAsyncThunk('poems/fetchPoems', async (_, { getState }) => {
   const { auth } = getState() as RootState;
-  const token = auth.token; // Get the access token from the auth state
+  const token = auth.token;
   const response = await apiService.getGeneratedPoems(token!);
   return response;
 });
 
 export const fetchPoemDetail = createAsyncThunk('poems/fetchPoemDetail', async (poemId: number, { getState }) => {
   const { auth } = getState() as RootState;
-  const token = auth.token; // Get the access token from the auth state
+  const token = auth.token;
   const response = await apiService.getPoemDetail(token!, poemId);
   return response;
 });
 
 export const deletePoem = createAsyncThunk('poems/deletePoem', async (poemId: number, { getState }) => {
   const { auth } = getState() as RootState;
-  const token = auth.token; // Get the access token from the auth state
+  const token = auth.token;
   const response = await apiService.deletePoem(token!, poemId);
   return response;
 });
@@ -85,10 +84,10 @@ const poemSlice = createSlice({
       state.selectedPoem = action.payload;
     });
     builder.addCase(createPoem.rejected, (state, action) => {
-      console.log('createPoem rejected:', action.payload); // Log the rejection payload
+      console.log('createPoem rejected:', action.payload);
     });
     builder.addCase(createPoem.pending, (state, action) => {
-      console.log('createPoem pending'); // Log that createPoem is pending
+      console.log('createPoem pending');
     });
   },
 });

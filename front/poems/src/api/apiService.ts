@@ -1,8 +1,7 @@
 import User from "../features/users/userSlice";
 import { Token } from "../types/token";
-// import { REACT_APP_API_BASE_URL } from './utils'
 
-const API_BASE_URL = "https://poems-fsdx.onrender.com/api/"
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL
 
   export const apiService = {
   async register(username: string, password: string, email: string, token: Token | null) {
@@ -26,7 +25,7 @@ const API_BASE_URL = "https://poems-fsdx.onrender.com/api/"
       }
   
       const responseData = await response.json();
-      return responseData.access; // Return the 'access' token
+      return responseData.access;
     } catch (error) {
       console.error('Failed to register:', error);
       throw error;
@@ -44,7 +43,6 @@ const API_BASE_URL = "https://poems-fsdx.onrender.com/api/"
     
     if (!response.ok) {
       throw new Error('Login failed');
-
     }
 
     const responseData = await response.json();

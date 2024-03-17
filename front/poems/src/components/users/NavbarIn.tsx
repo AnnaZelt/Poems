@@ -7,8 +7,8 @@ import { User } from '../../types/user';
 import UpdateForm from '../form/UpdateForm';
 
 interface NavbarInProps {
-  onUpdate: () => void;
-  onDelete: () => void;
+  onUpdate: (isSuccessful: boolean) => void;
+  onDelete: (isSuccessful: boolean) => void;
   onLogout: () => void;
   token: Token;
   userId: number;

@@ -34,9 +34,10 @@ def generate_poem(input_text, poet_style):
 
     return generated_text
 
-# Example usage
+# Example 
+
 # custom_prompt = input("Enter your custom prompt: ")
-# poet_style = "HP_LOVECRAFT"
+# poet_style = "EDGAR_ALLAN_POE"
 # generated_poem = generate_poem(custom_prompt, poet_style)
 # print("Generated Poem:")
 # print(generated_poem)

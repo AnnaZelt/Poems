@@ -4,7 +4,7 @@ import RegisterForm from '../form/RegisterForm';
 
 interface NavbarOutProps {
   onLogin: (isSuccessful: boolean) => void;
-  onRegister: () => void;
+  onRegister: (isSuccessful: boolean) => void;
 }
 
 const NavbarOut: React.FC<NavbarOutProps> = ({ onLogin, onRegister }) => {

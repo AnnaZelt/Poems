@@ -58,31 +58,45 @@ function App() {
     }
   };
 
-  const handleRegister = () => {
+  const handleRegister = (isSuccessful: boolean) => {
+    if (isSuccessful) {
     setMessageContent('Registration successful!');
+    setTokenChanged(true);
+  } else {
+    setMessageContent('Something went wrong');
     setShowMessage(true);
     setTimeout(() => {
       setShowMessage(false);
     }, 3000);
   };
+}
 
-  const handleUpdate = () => {
-    setMessageContent('Updated details');
+  const handleUpdate = (isSuccessful: boolean) => {
+    if (isSuccessful) {
+    setMessageContent('Details updated');
+    setTokenChanged(true);
+  } else {
+    setMessageContent('Something went wrong');
     setShowMessage(true);
     setTimeout(() => {
       setShowMessage(false);
     }, 3000);
     setTokenChanged(false);
   };
+}
 
-  const handleDelete = () => {
-    setMessageContent('User deleted');
+  const handleDelete = (isSuccessful: boolean) => {
+    if (isSuccessful) {
+    setMessageContent('User removed');
+    setTokenChanged(true);
+    } else {
     setShowMessage(true);
     setTimeout(() => {
       setShowMessage(false);
     }, 3000);
     setTokenChanged(false);
   };
+};
 
   const handleLogout = () => {
     setTokenChanged(false)

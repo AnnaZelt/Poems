@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { AppDispatch } from '../../redux/store';
 
 interface RegisterFormProps {
-  onRegister: () => void;
+  onRegister: (isSuccessful: boolean) => void;
 }
 
 const RegisterForm: React.FC<RegisterFormProps> = ({ onRegister }) => {
@@ -14,8 +14,13 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onRegister }) => {
   const [email, setEmail] = useState('');
 
   const handleRegister = () => {
-    dispatch(register({ username, password, email })).then(() => {
-      onRegister();
+    dispatch(register({ username, password, email })).then((action) => {
+      if (register.fulfilled.match(action)) {
+        onRegister(true); // Notify the parent component that login was successful
+      } else {
+        onRegister(false); // Notify the parent component that login failed
+      }
+      
     });
   };
 

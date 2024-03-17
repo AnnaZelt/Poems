@@ -22,14 +22,14 @@ class CustomTokenObtainPairView(TokenObtainPairView):
 def index(request):
     return Response('hello')
 
-import psutil
-def bytes_to_gb(bytes):
-    gb = bytes / (1024 ** 3)
-    return gb
+# import psutil
+# def bytes_to_gb(bytes):
+#     gb = bytes / (1024 ** 3)
+#     return gb
 
-process = psutil.Process()
-memory_info = process.memory_info()
-print(f"Memory Usage: {bytes_to_gb(memory_info.rss)} GB")
+# process = psutil.Process()
+# memory_info = process.memory_info()
+# print(f"Memory Usage: {bytes_to_gb(memory_info.rss)} GB")
 
 
 @api_view(['POST'])

@@ -23,8 +23,8 @@ const Poem: React.FC = () => {
     if (poem && showPopup && popupText.length < poem.poem_text.length) {
       const interval = setInterval(() => {
         setPopupText((prevText) => {
-          const nextChar = poem.poem_text[prevText.length];
-          return prevText + nextChar;
+          const nextChar = poem.poem_text[prevText.length]; // Limit the written-out chars to poem text only
+          return prevText + nextChar;                       // and set the writing speed of the animation
         });
       }, 25);
       return () => clearInterval(interval);
@@ -39,8 +39,8 @@ const Poem: React.FC = () => {
         if (createPoem.fulfilled.match(action)) {
           setPoem(action.payload); // Update the poem state with the newly created poem
           setLoading(false); // Hide the spinner
-          setShowPoem(true); // Show the poem
-          setShowPopup(true); // Show the popup
+          setShowPoem(true); 
+          setShowPopup(true); 
         }
       });
     }

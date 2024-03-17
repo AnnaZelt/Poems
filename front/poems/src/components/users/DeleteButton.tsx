@@ -7,7 +7,7 @@ import { Token } from '../../types/token';
 interface DeleteUserProps {
   token: Token;
   userId: number;
-  onDelete: () => void;
+  onDelete: (isSuccessful: boolean) => void;
 }
 
 const DeleteButton: React.FC<DeleteUserProps> = ({ token, userId, onDelete }) => {
@@ -15,8 +15,12 @@ const DeleteButton: React.FC<DeleteUserProps> = ({ token, userId, onDelete }) =>
 
   const handleDeleteUser = () => {
     if (window.confirm('Are you sure you want to delete your account?')) {
-    dispatch(deleteUser({ token, userId })).then(() => {
-      onDelete();
+    dispatch(deleteUser({ token, userId })).then((action) => {
+      if (deleteUser.fulfilled.match(action)) {
+        onDelete(true); // Notify the parent component that login was successful
+      } else {
+        onDelete(false); // Notify the parent component that login failed
+      }
     });
   };
 }

@@ -25,7 +25,7 @@ const PoemList: React.FC<PoemListProps> = () => {
         if (fetchPoems.fulfilled.match(action)) {
           setFetchedPoems(action.payload);
         } else if (fetchPoems.rejected.match(action)) {
-          setMessageContent('Token expired');
+          setMessageContent('Something went wrong');
           setShowMessage(true);
           setTimeout(() => {
             setShowMessage(false);
@@ -46,7 +46,6 @@ const PoemList: React.FC<PoemListProps> = () => {
 
       setFetchedPoems((prevPoems) => prevPoems.filter((poem) => poem.id !== id));
     } catch (error) {
-      console.error('Failed to delete poem:', error);
       setMessageContent('Failed to delete poem');
       setShowMessage(true);
       setTimeout(() => {

@@ -5,7 +5,7 @@ import { User } from '../../types/user';
 import { Token } from '../../types/token';
 
 interface UserState {
-  users: Record<number, User>; // Map user IDs to user objects
+  users: Record<number, User>;
 }
 
 const initialState: UserState = {
@@ -15,11 +15,8 @@ const initialState: UserState = {
 export const updateUser = createAsyncThunk<User, { token: Token; userId: number; userData: Partial<User> }>(
   'users/updateUser',
   async (data) => {
-    const { token, userId, userData } = data;
-    console.log(userData);
-    
+    const { token, userId, userData } = data;    
     const updatedUser = await apiService.updateUser(token, userId, userData);
-    // Update the user in the state
     return updatedUser;
   }
 );
@@ -33,7 +30,9 @@ export const deleteUser = createAsyncThunk<User, { token: Token; userId: number;
   }
 );
 
-export const fetchUserDetail = createAsyncThunk<User, number>('users/fetchUserDetail', async (userId, { getState }) => {
+export const fetchUserDetail = createAsyncThunk<User, number>(
+  'users/fetchUserDetail', 
+  async (userId, { getState }) => {
   const { auth } = getState() as RootState;
   const token = auth.token!;
   const response = await apiService.getUserDetail(token, userId);
@@ -52,17 +51,17 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     setUser(state, action: PayloadAction<User>) {
-      state.users[action.payload.id!] = action.payload; // Update or add user to the normalized state
+      state.users[action.payload.id!] = action.payload;
     },
     clearUser(state) {
-      state.users = {}; // Clear all users
+      state.users = {};
     },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchUserDetail.fulfilled, (state, action) => {
       const user = action.payload;
       if (user.id !== null) {
-        state.users[user.id] = user; // Update or add user to the normalized state
+        state.users[user.id] = user;
       }
     });
   },

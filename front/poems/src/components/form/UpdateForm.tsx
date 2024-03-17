@@ -11,7 +11,7 @@ interface UpdateFormProps {
   token: Token;
   userId: number;
   userData: Partial<User>;
-  onUpdate: () => void;
+  onUpdate: (isSuccessful: boolean) => void;
 }
 
 const UpdateForm: React.FC<UpdateFormProps> = ({ token, userId, userData}) => {
@@ -56,7 +56,7 @@ const UpdateForm: React.FC<UpdateFormProps> = ({ token, userId, userData}) => {
         value={email}
         onChange={handleChange}
       />
-      <button onClick={handleUpdateUser}>Update User</button>
+      <button onClick={handleUpdateUser}>Update details</button>
     </div>
   );
 };
