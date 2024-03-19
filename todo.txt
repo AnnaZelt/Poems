@@ -1,4 +1,1 @@
 * add email functionality
-* add logo
-* add logging
-* move the project to free online servers, and chnge to postgresql
