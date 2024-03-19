@@ -12,7 +12,6 @@ const Poem: React.FC = () => {
   const [poem, setPoem] = useState<Poemtype | null>(null);
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
-
   const [showPopup, setShowPopup] = useState(false);
   const [popupText, setPopupText] = useState('');
 
