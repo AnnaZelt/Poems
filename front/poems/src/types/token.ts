@@ -4,5 +4,5 @@ export interface Token {
   id: number | null;
   username: string | null;
   email: string | null;
-  is_active: boolean | null;
+  is_active: true | false;
 }
