@@ -95,5 +95,5 @@ const poemSlice = createSlice({
 export const { selectPoem, clearSelectedPoem } = poemSlice.actions;
 
 export const selectPoems = (state: RootState) => state.poems.poems;
-export const selectSelectedPoem = (state: RootState) => state.poems.selectedPoem; // Selector for accessing the selected poem details
+export const selectSelectedPoem = (state: RootState) => state.poems.selectedPoem;
 export default poemSlice.reducer;

@@ -1,53 +1,38 @@
-# TO BE UPDATED
+# Poems Project
 
-__________________________________________________________
+This project is a web application for generating and managing poems.
 
-# Getting Started with Poems
-## This app uses MySql for DB management
-## and uses MySql community server and MySql Workbench
+## Technologies Used
 
-## Clone this repository
-### git clone https://github.com/AnnaZelt/Poems.git
+- Frontend: React with Redux Toolkit and TypeScript
+- Backend: Python Django
+- Hosting: Netlify (frontend), Render (backend and database)
 
-## Create a virtual environment
-### cd Poems/back
-### pip install virtualenv 
-Installs the virtual envoronment on your computer
-    
-### py/python -m virtualenv myenv
-Installs the virtual envorinment on your project
-    
-### myenv\Scripts\activate
-Activates the virtual environment
+## Features
 
-## Install the packages for the backend
-### pip install -r Requirements.txt
-### pip freeze > Requirements.txt
+- User registration and login
+- User profile management (update and delete)
+- Poem generation
+- Secure authentication and authorization
 
-## Replace the following line with your MySql DB password
-### DATABASES = {
-###     'default': {
-###         ...
-###         ...
-###         'PASSWORD': 'Your_MySql_Password',
-###         ...
-###     }
-### }
+## Getting Started
 
-### Replace the following line with your own secret key
-Run the command:
-### py/python manage.py shell -c "from django.core.management.utils import get_random_secret_key; print('Your secret key: ',get_random_secret_key())"
-Then replace the line
-### SECRET_KEY = 'Your_Secret_Key'
-With the result you get in the cli
+To run this project locally, follow these steps:
 
-## run the backend server
-### py/python manage.py runserver
+1. Clone the repository: `git clone https://github.com/AnnaZelt/Poems.git`
+2. Install dependencies: `cd your-repository` then `npm install` or `yarn install`
+3. Start the frontend: `npm start` or `yarn start`
+4. Set up the backend:
+   - Install Django and required packages: `pip install -r requirements.txt`
+   - Run migrations: `python manage.py migrate`
+   - Start the Django development server: `python manage.py runserver`
+5. Access the application in your browser at `http://localhost:3000`
 
-## Install the packages for your frontend
-### cd ..
-### cd front/poems
-### npm i
+## Deployment
 
-## Run the frontend server
-### npm start
+To deploy the frontend on Netlify and the backend on Render, follow these steps:
+
+1. Set up continuous deployment for the frontend and backend in their respective hosting platforms.
+2. Add environment variables for production settings, such as API URLs and database configurations.
+3. Deploy the frontend and backend using the hosting platforms' deployment tools.
+(Make sure to use the guides as they help a lot)
