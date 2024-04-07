@@ -23,7 +23,7 @@ To run this project locally, follow these steps:
 2. Install dependencies: `cd front/poems` then `npm install` or `yarn install`
 3. In `..front/poems/api/apiService.ts`: 
    change line 4 `const API_BASE_URL = process.env.REACT_APP_API_BASE_URL`
-   to `const API_BASE_URL = http://localhost:3000/api/`
+   to `const API_BASE_URL = "http://localhost:3000/api/"`
 4. Start the frontend: `npm start` or `yarn start`
 5. Set up the backend:
    - Install Django and required packages: `cd to ../back` then `pip install -r requirements.txt`
