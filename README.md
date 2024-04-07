@@ -27,7 +27,7 @@ To run this project locally, follow these steps:
 4. Start the frontend: `npm start` or `yarn start`
 5. Set up the backend:
    - Install Django and required packages: `cd to ../back` then `pip install -r requirements.txt`
-   - Replace `../poems/settings.py` with `assets/settings.py`
+   - Replace `../poems/settings.py` with `../assets/settings.py`
    - Run migrations: `python manage.py migrate`
    - Start the Django development server: `python manage.py runserver`
 6. Access the application in your browser at `http://localhost:3000`
