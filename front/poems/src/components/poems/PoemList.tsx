@@ -24,8 +24,6 @@ const PoemList: React.FC<PoemListProps> = () => {
     if (!fetchedPoems.length) {
       dispatch(fetchPoems()).then((action) => {
         setLoading(true);
-        console.log(loading);
-        
         if (fetchPoems.fulfilled.match(action)) {
           setFetchedPoems(action.payload);
           setLoading(false);
@@ -77,26 +75,31 @@ const PoemList: React.FC<PoemListProps> = () => {
       <button className="toggle-poems-btn" onClick={togglePoemsVisibility}>
         {showPoems ? 'Close Poems' : 'Show My Poems'}
       </button>
-      {loading ? (
-        <div className="spinner-list"></div>
-      ) : (
-        showPoems && (
+      {showPoems && (
+        <>
+          {loading && <div className="spinner-list"></div>}
           <ul>
-            {fetchedPoems.map((poem) => (
+            {fetchedPoems.map((poem) =>
               poem.is_active ? (
                 <li key={poem.id} className="poem-item">
                   <div>
-                    {poem.poem_text.length > 50 ? `${poem.poem_text.slice(0, 50)}...` : poem.poem_text}
+                    {poem.poem_text.length > 50
+                      ? `${poem.poem_text.slice(0, 50)}...`
+                      : poem.poem_text}
                   </div>
                   <div className="buttons">
-                    <button onClick={() => handlePoemClick(poem.poem_text)}>Expand</button>
-                    <button onClick={() => handleDeletePoem(poem.id)}>Delete</button>
+                    <button onClick={() => handlePoemClick(poem.poem_text)}>
+                      Expand
+                    </button>
+                    <button onClick={() => handleDeletePoem(poem.id)}>
+                      Delete
+                    </button>
                   </div>
                 </li>
               ) : null
-            ))}
+            )}
           </ul>
-        )
+        </>
       )}
   
       {selectedPoem && (
@@ -110,8 +113,7 @@ const PoemList: React.FC<PoemListProps> = () => {
         </div>
       )}
     </div>
-  );
-  
+  );  
 };
 
 export default PoemList;
