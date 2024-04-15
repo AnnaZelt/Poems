@@ -6,8 +6,8 @@ from corsheaders.defaults import default_headers, default_methods
 from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-load_dotenv()
-SECRET_KEY = 'django-insecure--0h(bt3!td$w+$-%yfh0r!1c=fkiqx90v3o%)hk8$jqx-^+e&7'
+load_dotenv
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 ALLOWED_HOSTS = []
 RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
