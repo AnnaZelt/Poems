@@ -18,12 +18,15 @@ const PoemList: React.FC<PoemListProps> = () => {
   const [fetchedPoems, setFetchedPoems] = useState<Poemtype[]>([]);
   const [selectedPoem, setSelectedPoem] = useState<string | null>(null);
   const [showPoems, setShowPoems] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (!fetchedPoems.length) {
+      setLoading(true);
       dispatch(fetchPoems()).then((action) => {
         if (fetchPoems.fulfilled.match(action)) {
           setFetchedPoems(action.payload);
+          setLoading(false);
         } else if (fetchPoems.rejected.match(action)) {
           setMessageContent('Something went wrong');
           setShowMessage(true);
@@ -72,6 +75,7 @@ const PoemList: React.FC<PoemListProps> = () => {
       <button className="toggle-poems-btn" onClick={togglePoemsVisibility}>
         {showPoems ? 'Close Poems' : 'Show My Poems'}
       </button>
+      {loading && <div className="spinner"></div>}
       {showPoems && (
         <ul>
           {fetchedPoems.map((poem) => (
