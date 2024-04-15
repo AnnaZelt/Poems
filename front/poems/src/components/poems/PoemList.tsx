@@ -22,8 +22,10 @@ const PoemList: React.FC<PoemListProps> = () => {
 
   useEffect(() => {
     if (!fetchedPoems.length) {
-      setLoading(true);
       dispatch(fetchPoems()).then((action) => {
+        setLoading(true);
+        console.log(loading.valueOf);
+        
         if (fetchPoems.fulfilled.match(action)) {
           setFetchedPoems(action.payload);
           setLoading(false);
