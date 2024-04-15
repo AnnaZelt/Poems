@@ -3,8 +3,11 @@ import os
 import dj_database_url
 from pathlib import Path
 from corsheaders.defaults import default_headers, default_methods
+from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+load_dotenv()
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 ALLOWED_HOSTS = []
 RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
