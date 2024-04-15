@@ -34,5 +34,6 @@ tqdm==4.66.2
 transformers==4.39.3
 typing_extensions==4.11.0
 tzdata==2024.1
+uvicorn==0.28.0
 urllib3==2.2.1
 whitenoise==6.6.0
