@@ -18,13 +18,13 @@ const PoemList: React.FC<PoemListProps> = () => {
   const [fetchedPoems, setFetchedPoems] = useState<Poemtype[]>([]);
   const [selectedPoem, setSelectedPoem] = useState<string | null>(null);
   const [showPoems, setShowPoems] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!fetchedPoems.length) {
       dispatch(fetchPoems()).then((action) => {
         if (fetchPoems.pending.match(action)) {
-        setLoading(true);
+          setLoading(true);
         }else if (fetchPoems.fulfilled.match(action)) {
           setFetchedPoems(action.payload);
           setLoading(false);

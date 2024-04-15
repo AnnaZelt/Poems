@@ -9,6 +9,8 @@ const Poem: React.FC = () => {
   const [inputText, setInputText] = useState('');
   const [poetStyle, setPoetStyle] = useState('');
   const [showPoem, setShowPoem] = useState(false);
+  const [showMessage, setShowMessage] = useState(false);
+  const [messageContent, setMessageContent] = useState('');
   const [poem, setPoem] = useState<Poemtype | null>(null);
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
@@ -40,6 +42,11 @@ const Poem: React.FC = () => {
           setLoading(false); // Hide the spinner
           setShowPoem(true); 
           setShowPopup(true); 
+        }
+        else if (createPoem.rejected.match(action)) {
+          setLoading(false); // Hide the spinner
+          setMessageContent('Something went wrong');
+          setShowMessage(true);
         }
       });
     }
