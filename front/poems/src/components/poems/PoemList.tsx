@@ -24,7 +24,7 @@ const PoemList: React.FC<PoemListProps> = () => {
     if (!fetchedPoems.length) {
       dispatch(fetchPoems()).then((action) => {
         setLoading(true);
-        console.log(loading.valueOf);
+        console.log(loading);
         
         if (fetchPoems.fulfilled.match(action)) {
           setFetchedPoems(action.payload);
@@ -77,25 +77,28 @@ const PoemList: React.FC<PoemListProps> = () => {
       <button className="toggle-poems-btn" onClick={togglePoemsVisibility}>
         {showPoems ? 'Close Poems' : 'Show My Poems'}
       </button>
-      {loading && <div className="spinner"></div>}
-      {showPoems && (
-        <ul>
-          {fetchedPoems.map((poem) => (
-            poem.is_active ? (
-              <li key={poem.id} className="poem-item">
-                <div>
-                  {poem.poem_text.length > 50 ? `${poem.poem_text.slice(0, 50)}...` : poem.poem_text}
-                </div>
-                <div className="buttons">
-                  <button onClick={() => handlePoemClick(poem.poem_text)}>Expand</button>
-                  <button onClick={() => handleDeletePoem(poem.id)}>Delete</button>
-                </div>
-              </li>
-            ) : null
-          ))}
-        </ul>
+      {loading ? (
+        <div className="spinner"></div>
+      ) : (
+        showPoems && (
+          <ul>
+            {fetchedPoems.map((poem) => (
+              poem.is_active ? (
+                <li key={poem.id} className="poem-item">
+                  <div>
+                    {poem.poem_text.length > 50 ? `${poem.poem_text.slice(0, 50)}...` : poem.poem_text}
+                  </div>
+                  <div className="buttons">
+                    <button onClick={() => handlePoemClick(poem.poem_text)}>Expand</button>
+                    <button onClick={() => handleDeletePoem(poem.id)}>Delete</button>
+                  </div>
+                </li>
+              ) : null
+            ))}
+          </ul>
+        )
       )}
-
+  
       {selectedPoem && (
         <div className="poem-popup">
           <div className="poem-popup-content">
@@ -108,6 +111,7 @@ const PoemList: React.FC<PoemListProps> = () => {
       )}
     </div>
   );
+  
 };
 
 export default PoemList;
