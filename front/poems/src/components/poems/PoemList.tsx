@@ -21,13 +21,14 @@ const PoemList: React.FC<PoemListProps> = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    setLoading(true);
     if (!fetchedPoems.length) {
       dispatch(fetchPoems()).then((action) => {
-        if (fetchPoems.fulfilled.match(action)) {
+        if (fetchPoems.pending.match(action)) {
+        setLoading(true);
+        }else if (fetchPoems.fulfilled.match(action)) {
           setFetchedPoems(action.payload);
           setLoading(false);
-        } else if (fetchPoems.rejected.match(action)) {
+        }else if (fetchPoems.rejected.match(action)) {
           setMessageContent('Something went wrong');
           setShowMessage(true);
           setLoading(false);
@@ -76,28 +77,30 @@ const PoemList: React.FC<PoemListProps> = () => {
       <button className="toggle-poems-btn" onClick={togglePoemsVisibility}>
         {showPoems ? 'Close Poems' : 'Show My Poems'}
       </button>
-          {loading && <div className="spinner"></div>}
-          <ul>
-            {fetchedPoems.map((poem) =>
-              poem.is_active ? (
-                <li key={poem.id} className="poem-item">
-                  <div>
-                    {poem.poem_text.length > 50
-                      ? `${poem.poem_text.slice(0, 50)}...`
-                      : poem.poem_text}
-                  </div>
-                  <div className="buttons">
-                    <button onClick={() => handlePoemClick(poem.poem_text)}>
-                      Expand
-                    </button>
-                    <button onClick={() => handleDeletePoem(poem.id)}>
-                      Delete
-                    </button>
-                  </div>
-                </li>
-              ) : null
-            )}
-          </ul>
+      {loading && <div className="spinner"></div>}
+      {showPoems && (
+        <ul>
+          {fetchedPoems.map((poem) =>
+            poem.is_active ? (
+              <li key={poem.id} className="poem-item">
+                <div>
+                  {poem.poem_text.length > 50
+                    ? `${poem.poem_text.slice(0, 50)}...`
+                    : poem.poem_text}
+                </div>
+                <div className="buttons">
+                  <button onClick={() => handlePoemClick(poem.poem_text)}>
+                    Expand
+                  </button>
+                  <button onClick={() => handleDeletePoem(poem.id)}>
+                    Delete
+                  </button>
+                </div>
+              </li>
+            ) : null
+          )}
+        </ul>
+      )}
       {selectedPoem && (
         <div className="poem-popup">
           <div className="poem-popup-content">
@@ -109,7 +112,7 @@ const PoemList: React.FC<PoemListProps> = () => {
         </div>
       )}
     </div>
-  );  
+  );
 };
 
 export default PoemList;

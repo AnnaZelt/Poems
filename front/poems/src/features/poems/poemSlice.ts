@@ -76,6 +76,9 @@ const poemSlice = createSlice({
     builder.addCase(fetchPoems.fulfilled, (state, action) => {
       state.poems = action.payload;
     });
+    builder.addCase(fetchPoems.pending, (state, action) => {
+      console.log('fetchPoem pending');
+    });
     builder.addCase(fetchPoemDetail.fulfilled, (state, action) => {
       state.selectedPoem = action.payload; // Update selectedPoem with the fetched poem details
     });
