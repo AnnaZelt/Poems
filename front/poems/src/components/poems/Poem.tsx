@@ -77,7 +77,7 @@ const Poem: React.FC = () => {
         </select>
         <button type="submit">Submit</button>
       </form>
-      {loading && <div className="spinner"></div>}
+      {loading && <div className="spinner-poem"></div>}
       {showPopup && (
         <div className="poem-popup">
           <div className="poem-popup-content">

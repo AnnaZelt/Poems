@@ -78,7 +78,7 @@ const PoemList: React.FC<PoemListProps> = () => {
         {showPoems ? 'Close Poems' : 'Show My Poems'}
       </button>
       {loading ? (
-        <div className="spinner"></div>
+        <div className="spinner-list"></div>
       ) : (
         showPoems && (
           <ul>
