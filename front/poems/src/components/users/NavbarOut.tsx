@@ -5,9 +5,10 @@ import RegisterForm from '../form/RegisterForm';
 interface NavbarOutProps {
   onLogin: (isSuccessful: boolean) => void;
   onRegister: (isSuccessful: boolean) => void;
+  onAboutClick: () => void;
 }
 
-const NavbarOut: React.FC<NavbarOutProps> = ({ onLogin, onRegister }) => {
+const NavbarOut: React.FC<NavbarOutProps> = ({ onLogin, onRegister, onAboutClick }) => {
   const [showLoginForm, setShowLoginForm] = useState(false);
   const [showRegisterForm, setShowRegisterForm] = useState(false);
 
@@ -27,6 +28,7 @@ const NavbarOut: React.FC<NavbarOutProps> = ({ onLogin, onRegister }) => {
       <button onClick={toggleRegisterForm}>{showRegisterForm ? 'Close' : 'Register'}</button>
       {showLoginForm && <LoginForm onLogin={onLogin} />}
       {showRegisterForm && <RegisterForm onRegister={onRegister} />}
+      <button onClick={onAboutClick}>About</button>
     </nav>
   );
 };

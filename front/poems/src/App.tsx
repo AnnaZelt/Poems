@@ -12,6 +12,7 @@ function App() {
   const [showMessage, setShowMessage] = useState(false);
   const [messageContent, setMessageContent] = useState('');
   const [tokenExpirationTime, setTokenExpirationTime] = useState<number | null>(null); // State for token expiration countdown
+  const [showAbout, setShowAbout] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
   const tokenString = localStorage.getItem('token');
   const token = tokenString ? JSON.parse(tokenString) : null;
@@ -102,6 +103,11 @@ function App() {
     setTokenChanged(false)
   };
 
+  const handleAboutClick = () => {
+    setTokenChanged(false)
+    setShowAbout((prev) => !prev);
+    };
+
   return (
     <div>
       <header className="header">
@@ -113,33 +119,48 @@ function App() {
             token={token}
             userId={Number(userId)}
             userData={{}}
+            onAboutClick={handleAboutClick}
           />
         ) : (
           <NavbarOut
             onLogin={handleLogin}
             onRegister={handleRegister}
+            onAboutClick={handleAboutClick}
           />
         )}
       </header>
       <div className="container mt-6">
-        {token ? (
-          <div>
-            <User userId={Number(userId)} />
-            <Poem />
-          </div>
+      {showAbout ? (
+        <div className="about-button">
+          Thank you for trying out my AI poems project!<br/>
+          This project was written using React Redux serving as the frontend and Python's Django as the backend.<br/>
+          ChatGPT 2.0's 'GPT2LMHeadModel' was used for as the AI model for poem generation.<br/><br/>
+
+          Note: As this is a hobby project, the server response wait times might take a little while, please be patient.
+        </div>
         ) : (
           <div>
-            <Poem />
-          </div>
-        )}
-        {showMessage && (
-          <div className="alert alert-success" role="alert">
-            {messageContent}
+            {token ? (
+              <div>
+                <User userId={Number(userId)} />
+                <Poem />
+              </div>
+            ) : (
+              <div>
+                <Poem />
+              </div>
+            )}
+            {showMessage && (
+              <div className="alert alert-success" role="alert">
+                {messageContent}
+              </div>
+            )}
           </div>
         )}
       </div>
     </div>
   );
+  
 }
 
 export default App;

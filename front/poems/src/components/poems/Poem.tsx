@@ -59,7 +59,7 @@ const Poem: React.FC = () => {
       {!token && <p className='p-tag'>
         Welcome to my poem generator! Here you can try your hand at generating your very own poem!<br/>
         Just input a prompt of your choosing, select the style of the poet you want, and the A.I - powered
-        poem generator will write a poem uniquely for you.
+        poem generator will write a poem uniquely for you.<br/>
         Try it:
       </p>}
       <form onSubmit={handleSubmit}>

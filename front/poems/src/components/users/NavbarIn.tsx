@@ -6,16 +6,18 @@ import { Token } from '../../types/token';
 import { User } from '../../types/user';
 import UpdateForm from '../form/UpdateForm';
 
+
 interface NavbarInProps {
   onUpdate: (isSuccessful: boolean) => void;
   onDelete: (isSuccessful: boolean) => void;
   onLogout: () => void;
+  onAboutClick: () => void;
   token: Token;
   userId: number;
   userData: Partial<User>;
 }
 
-const NavbarIn: React.FC<NavbarInProps> = ({ onUpdate, onDelete, onLogout, token, userId, userData }) => {
+const NavbarIn: React.FC<NavbarInProps> = ({ onUpdate, onDelete, onLogout, onAboutClick, token, userId, userData }) => {
   const [showUpdateForm, setShowUpdateForm] = useState(false);
 
   const toggleuUpdateForm = () => {
@@ -28,6 +30,7 @@ const NavbarIn: React.FC<NavbarInProps> = ({ onUpdate, onDelete, onLogout, token
       {showUpdateForm && <UpdateForm onUpdate={onUpdate} token={token} userId={userId} userData={userData} />}
       <DeleteButton onDelete={onDelete} token={token} userId={userId} />
       <LogoutButton onLogout={onLogout} />
+      <button onClick={onAboutClick}>About</button>
     </nav>
   );
 };
