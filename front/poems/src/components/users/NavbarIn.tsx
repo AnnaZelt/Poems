@@ -27,10 +27,10 @@ const NavbarIn: React.FC<NavbarInProps> = ({ onUpdate, onDelete, onLogout, onAbo
   return (
     <nav className="navbar-in">
       <button onClick={toggleuUpdateForm}>{showUpdateForm ? 'Close' : 'Update details '}</button>
+      <button onClick={onAboutClick}>About</button>
       {showUpdateForm && <UpdateForm onUpdate={onUpdate} token={token} userId={userId} userData={userData} />}
       <DeleteButton onDelete={onDelete} token={token} userId={userId} />
       <LogoutButton onLogout={onLogout} />
-      <button onClick={onAboutClick}>About</button>
     </nav>
   );
 };

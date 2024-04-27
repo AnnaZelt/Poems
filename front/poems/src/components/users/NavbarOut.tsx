@@ -26,9 +26,9 @@ const NavbarOut: React.FC<NavbarOutProps> = ({ onLogin, onRegister, onAboutClick
     <nav className='navbar-out'>
       <button onClick={toggleLoginForm}>{showLoginForm ? 'Close' : 'Login'}</button>
       <button onClick={toggleRegisterForm}>{showRegisterForm ? 'Close' : 'Register'}</button>
+      <button onClick={onAboutClick}>About</button>
       {showLoginForm && <LoginForm onLogin={onLogin} />}
       {showRegisterForm && <RegisterForm onRegister={onRegister} />}
-      <button onClick={onAboutClick}>About</button>
     </nav>
   );
 };
