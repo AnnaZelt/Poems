@@ -56,7 +56,7 @@ const UpdateForm: React.FC<UpdateFormProps> = ({ token, userId, userData}) => {
         value={email}
         onChange={handleChange}
       />
-      <button onClick={handleUpdateUser}>Update details</button>
+      <button onClick={handleUpdateUser}>Update Details</button>
     </div>
   );
 };
